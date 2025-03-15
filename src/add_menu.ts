@@ -22,8 +22,9 @@ export async function addMenu() {
         {type: "input", name: "materials", message: "Materiales:" },
         {type: "number", name: "weight", message: "Peso: "},
         {type: "number", name: "crowns", message: "Valor en coronas: "},
+        {type: "number", name: "quantity", message: "Número de stock: "}
       ]);
-      inventary.addAssets(new Assets(asset.id, asset.name, asset.description, asset.materials.split(","), asset.weight, asset.crowns));
+      inventary.addAssets([new Assets(asset.id, asset.name, asset.description, asset.materials.split(","), asset.weight, asset.crowns), asset.quantity]);
       break;
 
     case "Mercader":

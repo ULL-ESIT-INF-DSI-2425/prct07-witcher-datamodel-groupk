@@ -1,4 +1,3 @@
-import inquirer from "inquirer";
 
 /**
  * Interfaz Identifiable. Concreta los atributos mínimos que ha de tener una clase para ser identificable
@@ -13,34 +12,94 @@ export interface Identifiable {
  */
 export class Assets implements Identifiable {
 
+  public readonly id: number;
+  private static _idCount: number = 1; 
+
   /**
    * Constructor de Assets
-   * @param id - ID único del bien
    * @param name - Nombre del bien
-   * @param description - Descripción del bien
-   * @param materials - Materiales del bien
-   * @param weight - Peso del bien
-   * @param crowns - Valor en coronas del bien
+   * @param _description - Descripción del bien
+   * @param _materials - Materiales del bien
+   * @param _weight - Peso del bien
+   * @param _crowns - Valor en coronas del bien
    */
   constructor(
-    private readonly id: number, 
-    private readonly name: string, 
-    private readonly description: string, 
-    private readonly materials: string[],
-    private readonly weight: number,
-    private readonly crowns: number
+    public name: string, 
+    private _description: string, 
+    private _materials: string[],
+    private _weight: number,
+    private _crowns: number
   ) {
-    if (weight <= 0) {
+    if (_weight <= 0) {
       throw new Error("El peso del bien ha de ser mayor que 0.");
-    } else if (crowns < 0) {
+    } else if (_crowns < 0) {
       throw new Error("El número de coronas no puede ser negativos.");
     } else if (name === "") {
       throw new Error("El nombre no puede estar vacío.");
-    } else if (description === "") {
+    } else if (_description === "") {
       throw new Error("El descripción no puede estar vacía.");
-    } else if (materials.length === 0) {
+    } else if (_materials.length === 0) {
       throw new Error("La lista de materiales no puede estar vacía.");
     }
+
+    this.id = Assets._idCount;
+    Assets._idCount++;
+  }
+
+  /**
+   * Getter de description
+   */
+  get description() {
+    return this._description;
+  }
+
+  /**
+   * Setter de description
+   */
+  set description(desc: string) {
+    this._description = desc;
+  }
+
+  /**
+   * Getter de materials
+   */
+  get materials() {
+    return this._materials;
+  }
+
+  /**
+   * Setter de materials
+   */
+  set materials(mats: string[]) {
+    this._materials = mats;
+  }
+
+  /**
+   * Getter de weight
+   */
+  get weight() {
+    return this._weight;
+  }
+
+  /**
+   * Setter de weight
+   */
+  set weight(weight: number) {
+    this._weight = weight;
+  }
+
+  /**
+   * Getter de crowns
+   */
+  get crowns() {
+    return this._crowns;
+  }
+
+  /**
+   * Setter de crowns
+   */
+  set crowns(crowns: number) {
+    this._crowns = crowns;
   }
 }
 
@@ -68,22 +127,40 @@ export enum Race {
  */
 export abstract class Person implements Identifiable {
 
+  public readonly id: number;
+  private static _idCount: number = 1;
+
   /**
    * Costructor de Person
-   * @param id - ID único de la persona
    * @param name - Nombre de la persona
-   * @param location - Ubicación de la persona
+   * @param _location - Ubicación de la persona
    */
   constructor(
-    protected readonly id: number, 
-    protected readonly name: string, 
-    protected readonly location: string) 
+    public name: string, 
+    protected _location: string) 
     {
       if (name === "") {
        throw new Error("El nombre no puede estar vacío.");
-      } else if (location === "") {
+      } else if (_location === "") {
        throw new Error("El nombre de la localización no puede estar vacío.");
       }
+
+      this.id = Person._idCount;
+      Person._idCount++;
+    }
+
+    /**
+     * Getter de location
+     */
+    get location() {
+      return this._location;
+    }
+
+    /**
+     * Setter de location
+     */
+    set location(local: string) {
+      this._location = local;
     }
 }
 
@@ -94,18 +171,31 @@ export class Merchant extends Person {
 
   /**
    * Constructor de Merchant
-   * @param id - ID único del mercader
    * @param name - Nombre del mercader
    * @param location - Ubicación del mercader
-   * @param _tipo - Tipo del mercader
+   * @param _type - Tipo del mercader
    */
-  constructor(id: number, 
+  constructor(
     name: string, 
     location: string, 
-    private readonly _tipo: Type) 
+    private _type: Type) 
     {
-      super(id, name, location);
+      super(name, location);
     }
+
+  /**
+   * Getter de type
+   */
+  get type() {
+    return this._type
+  }
+
+  /**
+   * Setter de type
+   */
+  set type(type: Type) {
+    this._type = type;
+  }
 }
 
 /**
@@ -114,19 +204,31 @@ export class Merchant extends Person {
 export class Clients extends Person {
   
   /**
-   * 
-   * @param id - ID único del cliente
+   * Constructor de Clients
    * @param name - Nombre del cliente
    * @param location - Ubicación del cliente
-   * @param race - Raza del cliente
+   * @param _race - Raza del cliente
    */
   constructor(
-    id: number, 
     name: string, 
     location: string, 
-    private readonly race: Race
+    private _race: Race
   ) {
-    super(id, name, location);
+    super(name, location);
+  }
+
+  /**
+   * Getter de race
+   */
+  get race() {
+    return this._race;
+  }
+
+  /**
+   * Setter de race
+   */
+  set race(race: Race) {
+    this._race = race;
   }
 }
 
@@ -207,18 +309,12 @@ export class Inventary {
   removeClient(client: Clients): void {
     this.client_list.filter(element => element !== client);
   }
-
-  getAssets(pred: (asset: Stock) => boolean): string {
-    const assets: Stock[] = this.bienes_list.filter(pred);
-
-    
-  }
 }
 
 /**
  * Clase Date. Representa a una fecha
  */
-class Date {
+export class Date {
 
   /**
    * Constructor de Date
@@ -230,6 +326,11 @@ class Date {
     private readonly day: number, 
     private readonly month: number, 
     private readonly year: number) {
+      if (day < 1 || month < 1 || month > 12 || year < 1 || 
+          (month === 2 && ((year % 4 === 0 && (year % 100 !== 0 || year % 400) && day > 29) || day > 28)) ||
+          ((month === 4 || month === 6 || month === 9 || month === 11) && day > 30) || (day > 31)) {
+            throw new Error("Formato de fecha incorrecto.");
+      }
   }
 
   /**
