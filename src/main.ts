@@ -318,17 +318,17 @@ export class Date {
 
   /**
    * Constructor de Date
-   * @param day - Día
-   * @param month - Mes
-   * @param year - Año
+   * @param _day - Día
+   * @param _month - Mes
+   * @param _year - Año
    */
   constructor(
-    private readonly day: number, 
-    private readonly month: number, 
-    private readonly year: number) {
-      if (day < 1 || month < 1 || month > 12 || year < 1 || 
-          (month === 2 && ((year % 4 === 0 && (year % 100 !== 0 || year % 400) && day > 29) || day > 28)) ||
-          ((month === 4 || month === 6 || month === 9 || month === 11) && day > 30) || (day > 31)) {
+    private _day: number, 
+    private _month: number, 
+    private _year: number) {
+      if (_day < 1 || _month < 1 || _month > 12 || _year < 1 || 
+          (_month === 2 && ((_year % 4 === 0 && (_year % 100 !== 0 || _year % 400) && _day > 29) || _day > 28)) ||
+          ((_month === 4 || _month === 6 || _month === 9 || _month === 11) && _day > 30) || (_day > 31)) {
             throw new Error("Formato de fecha incorrecto.");
       }
   }
@@ -338,7 +338,7 @@ export class Date {
    * @returns String de forma DD/MM/AAAA
    */
   getDate(): string {
-    return `${this.day}/${this.month}/${this.year}`;
+    return `${this._day}/${this._month}/${this._year}`;
   }
 }
 
