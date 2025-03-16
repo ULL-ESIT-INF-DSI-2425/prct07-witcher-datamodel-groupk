@@ -1,5 +1,5 @@
 import inquirer from "inquirer";
-import { Assets, Merchant, Clients, Inventary, Type, Race } from "../src/main"
+import { Inventary } from "../items/inventary.js";
 
 const inventary = new Inventary();
 

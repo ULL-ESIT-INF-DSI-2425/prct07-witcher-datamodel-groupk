@@ -1,5 +1,9 @@
 import inquirer from "inquirer";
-import { Assets, Merchant, Clients, Inventary, Type, Race } from "../src/main"
+import { Inventary } from "../items/inventary.js";
+import { Assets } from "../items/asset.js";
+import { Merchant } from "../characters/merchant.js";
+import { Clients } from "../characters/client.js";
+import * as Enums from "../enums/types-and-races.js";
 
 const inventary = new Inventary();
 
@@ -32,7 +36,7 @@ export async function addMenu() {
         {type: "number", name: "id", message: "ID: "},
         {type: "input", name: "name", message: "Nombre del mercader:" },
         {type: "input", name: "location", message: "Ubicación:" },
-        {type: "list", name: "type", message: "Tipo: ", choices: Object.values(Type)},
+        {type: "list", name: "type", message: "Tipo: ", choices: Object.values(Enums.Type)},
       ]);
       inventary.addMerchant(new Merchant(merchant.id, merchant.name, merchant.location, merchant.type));
       break;
@@ -42,7 +46,7 @@ export async function addMenu() {
         {type: "number", name: "id", message: "ID: "},
         {type: "input", name: "name", message: "Nombre del cliente:" },
         {type: "input", name: "location", message: "Ubicación:" },
-        {type: "list", name: "race", message: "Raza: ", choices: Object.values(Race)},
+        {type: "list", name: "race", message: "Raza: ", choices: Object.values(Enums.Race)},
       ]);
       inventary.addClient(new Clients(client.id, client.name, client.location, client.race));
       break;

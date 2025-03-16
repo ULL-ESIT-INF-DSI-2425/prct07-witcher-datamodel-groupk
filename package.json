@@ -13,6 +13,7 @@
     "type": "git",
     "url": "git+https://github.com/ULL-ESIT-INF-DSI-2425/prct07-witcher-datamodel-groupk.git"
   },
+  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -30,6 +31,6 @@
     "vitest": "^3.0.8"
   },
   "dependencies": {
-    "inquirer": "^12.4.3"
+    "inquirer": "^12.5.0"
   }
 }
