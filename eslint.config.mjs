@@ -19,7 +19,8 @@ export default [
   {
     rules: {
       "tsdoc/syntax": "warn",
-      "no-case-declarations": "off"
+      "no-case-declarations": "off",
+      "prefer-const": "warn"
     },
   },
   { ignores: ["eslint.config.mjs", "coverage/*", "dist/*", "docs/*", ".github/*"] },
