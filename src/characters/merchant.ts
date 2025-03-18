@@ -6,6 +6,8 @@ import * as Enums from "../enums/types-and-races.js";
  */
 export class Merchant extends Person {
 
+  private static _idCount = 1;
+
     /**
      * Constructor de Merchant
      * @param name - Nombre del mercader
@@ -18,6 +20,9 @@ export class Merchant extends Person {
       private _type: Enums.Type) 
       {
         super(name, location);
+
+        this._id = Merchant._idCount;
+        Merchant._idCount++;
       }
   
     /**

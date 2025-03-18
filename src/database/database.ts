@@ -1,4 +1,5 @@
-import { JSONFilePreset } from "lowdb/node";
+import { Low } from "lowdb";
+import { JSONFile } from "lowdb/node"
 import { Assets } from "../items/asset.js";
 import { Merchant } from "../characters/merchant.js";
 import { Clients } from "../characters/client.js";
@@ -22,7 +23,8 @@ const defaultData: Data = {
                 MyMerchants.merchant6, MyMerchants.merchant7, MyMerchants.merchant8, MyMerchants.merchant9, MyMerchants.merchant10 ], 
 
     clients: [ MyClients.client1, MyClients.client2, MyClients.client3, MyClients.client4, MyClients.client5, 
-               MyClients.client6, MyClients.client7, MyClients.client8, MyClients.client9, MyClients.client10 ] 
+               MyClients.client6, MyClients.client7, MyClients.client8, MyClients.client9, MyClients.client10 ]
 };
 
-const db = await JSONFilePreset<Data>('db.json', defaultData);
+export let db = new Low<Data>(new JSONFile('db.json'), defaultData);
+

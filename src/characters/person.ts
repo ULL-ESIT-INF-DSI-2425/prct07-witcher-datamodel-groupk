@@ -1,12 +1,10 @@
-import { Identifiable } from "../interfaces/identifiable.js";
-
 /**
  * Clase abstracta Person. Describe los atributos mínimos que ha de tener una perrsona.
  */
-export abstract class Person implements Identifiable {
+export abstract class Person {
 
-    public readonly id: number;
-    private static _idCount: number = 1;
+    protected _id: number;
+
   
     /**
      * Costructor de Person
@@ -23,8 +21,7 @@ export abstract class Person implements Identifiable {
          throw new Error("El nombre de la localización no puede estar vacío.");
         }
   
-        this.id = Person._idCount;
-        Person._idCount++;
+        this._id = 0;
       }
   
       /**

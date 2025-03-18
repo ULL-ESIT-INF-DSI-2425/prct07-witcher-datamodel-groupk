@@ -5,6 +5,8 @@ import * as Enums from "../enums/types-and-races.js";
  * Clase Clients. Representa a un cliente
  */
 export class Clients extends Person {
+
+  private static _idCount = 1;
   
     /**
      * Constructor de Clients
@@ -18,6 +20,9 @@ export class Clients extends Person {
       private _race: Enums.Race
     ) {
       super(name, location);
+
+      this._id = Clients._idCount;
+      Clients._idCount++;
     }
   
     /**
