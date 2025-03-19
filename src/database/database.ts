@@ -28,3 +28,116 @@ const defaultData: Data = {
 
 export let db = new Low<Data>(new JSONFile('db.json'), defaultData);
 
+/**
+ * Inicializamos la base de datos con los valores por defecto.
+ */
+export async function initDB() {
+  await db.read();
+  db.data ||= defaultData; 
+  await db.write();
+}
+
+/**
+ * Añade un bien a la base de datos.
+ * @param asset - Bien a agregar.
+ */
+export async function addAsset(asset: Assets) {
+  await initDB();
+  db.data.assets.push(asset);
+  await db.write();
+}
+
+/**
+ * Elimina un bien de la base de datos dado su nombre.
+ * @param name - Nombre del bien a eliminar.
+ */
+export async function removeAsset(name: string) {
+  await initDB();
+  const index = db.data.assets.findIndex((asset: Assets) => asset.name === name);
+  if (index !== -1) {
+    db.data.assets.splice(index, 1);
+    await db.write();
+  } 
+}
+
+/**
+ * Permite modificar un bien.
+ * @param name - Nombre del bien a modificar.
+ * @param updated_data - Datos del bien a modificar. 
+ */
+export async function updateAsset(name: string, updated_data: Partial<Assets>) {
+  await initDB();
+  const index = db.data.assets.findIndex((asset: Assets) => asset.name === name);
+  if (index !== -1) {
+    db.data.assets[index] = { ...db.data.assets[index], ...updated_data };
+    await db.write();
+  }
+}
+
+/**
+ * Añade un mercader a la base de datos.
+ * @param merchant - Mercader a agregar.
+ */
+export async function addMerchant(merchant: Merchant) {
+  await initDB();
+  db.data.merchants.push(merchant);
+  await db.write();
+}
+
+/**
+ * Elimina un mercader de la base de datos dado su nombre.
+ * @param name - Nombre del mercader a eliminar.
+ */
+export async function removeMerchant(name: string) {
+  await initDB();
+  db.data.merchants = db.data.merchants.filter((merchant: Merchant) => merchant.name !== name);
+  await db.write();
+}
+
+/**
+ * Permite modificar el estado de un mercader.
+ * @param name - Nombre del mercader a modificar.
+ * @param updated_data - Datos del mercader a modificar.
+ */
+export async function updateMerchant(name: string, updated_data: Partial<Merchant>) {
+  await initDB();
+  const index = db.data.merchants.findIndex((merchant: Merchant) => merchant.name === name);
+  if (index !== -1) {
+    db.data.merchants[index] = { ...db.data.merchants[index], ...updated_data };
+    await db.write(); 
+  } 
+}
+
+/**
+ * Añade un cliente a la base de datos.
+ * @param client - Cliente a agregar
+ */
+export async function addClient(client: Clients) {
+  await initDB();
+  db.data.clients.push(client);
+  await db.write();
+}
+
+/**
+ * Elimina un cliente de la base de datos dado su nombre.
+ * @param name - Nombre del cliente a eliminar.
+ */
+export async function removeClient(name: string) {
+  await initDB();
+  db.data.clients = db.data.clients.filter((client: Clients) => client.name !== name);
+  await db.write();
+}
+
+/**
+ * Permite modificar el estado de un cliente.
+ * @param name - Nombre del cliente a modificar.
+ * @param updated_data - Datos del cliente a modificar. 
+ */
+export async function updateClient(name: string, updated_data: Partial<Clients>) {
+  await initDB();
+  const index = db.data.clients.findIndex((client: Clients) => client.name === name);
+  if (index !== -1) {
+    db.data.clients[index] = { ...db.data.clients[index], ...updated_data };
+    await db.write();
+  }
+}

@@ -1,8 +1,6 @@
 import inquirer from "inquirer";
 import { Inventary } from "../items/inventary.js";
 
-const inventary = new Inventary();
-
 async function menu() {
   const { option } = await inquirer.prompt([
     {
