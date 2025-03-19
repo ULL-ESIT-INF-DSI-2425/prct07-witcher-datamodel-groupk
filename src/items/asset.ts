@@ -1,11 +1,9 @@
-import { Identifiable } from "../interfaces/identifiable.js";
-
 /**
  * Clase Assets. Representa un bien
  */
-export class Assets implements Identifiable {
+export class Assets {
 
-    public readonly id: number;
+    private readonly _id: number;
     private static _idCount: number = 1; 
   
     /**
@@ -35,7 +33,7 @@ export class Assets implements Identifiable {
         throw new Error("La lista de materiales no puede estar vacía.");
       }
   
-      this.id = Assets._idCount;
+      this._id = Assets._idCount;
       Assets._idCount++;
     }
   

@@ -1,12 +1,15 @@
 import { Assets } from "../items/asset.js";
 import { TransactionType } from "../enums/transaction-type.js";
+import { Stock } from "../types/stock.js";
 import { Date } from "../utils/date.js"
 
-export class Transaction {
-    constructor(
-      private readonly date: Date, 
-      private readonly exchange_asset: Assets[], 
-      private readonly crowns: number, 
-      private readonly type: TransactionType) {}
+export abstract class Transaction {
+  protected _crowns: number = 0;
+  
+    constructor(protected readonly _date: Date, protected readonly _exchangeAsset: Stock[]) {
+      _exchangeAsset.forEach((asset) => {
+        this._crowns += asset[0].crowns;
+      })
+    }
     
 }
