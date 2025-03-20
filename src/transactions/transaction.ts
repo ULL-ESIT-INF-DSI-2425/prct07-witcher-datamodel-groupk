@@ -1,4 +1,3 @@
-import { TransactionType } from "../types/transaction-type.js";
 import { Stock } from "../types/stock.js";
 import { Date } from "../utils/date.js"
 
@@ -12,12 +11,18 @@ export abstract class Transaction {
    * Constructor de Transaction
    * @param _date - Fecha en la que se realizó la transacción
    * @param _exchangeAssets - Bienes que son intercambiados
-   * @param _type - Tipo de la transacción
    */
-  constructor(protected readonly _date: Date, protected readonly _exchangeAssets: Stock[], protected _type: TransactionType) {
+  constructor(protected readonly _date: Date, protected readonly _exchangeAssets: Stock[]) {
     _exchangeAssets.forEach((asset) => {
-      this._crowns += asset[0].crowns;
+      this._crowns += asset[0].crowns * asset[1];
     });
+   }
+
+   /**
+    * Getter de date
+    */
+   get date() {
+    return this._date;
    }
 
    /**
@@ -32,12 +37,5 @@ export abstract class Transaction {
     */
    get exchangeAssets() {
     return this._exchangeAssets;
-   }
-
-   /**
-    * Getter de type
-    */
-   get type() {
-    return this._type;
    }
 }

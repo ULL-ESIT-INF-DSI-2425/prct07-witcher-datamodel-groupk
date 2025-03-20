@@ -6,6 +6,8 @@ import { Date } from "../utils/date.js";
 import { db } from "../database/database.js";
 import { BuyTransaction } from "../transactions/buyTransaction.js";
 import { SellTransaction } from "../transactions/sellTransation.js";
+import { RefundBuyTransaction } from "../transactions/refundBuyTransaction.js";
+import { RefundSellTransaction } from "../transactions/refundSellTransaction.js";
 
 /**
  * Clase Inventary. Representa un inventario compuesto de bienes, mercaderes y clientes
@@ -25,13 +27,6 @@ export class Inventary {
    */
   get assetsList() {
     return this._assetsList;
-  }
-
-  /**
-   * Setter de assetsList
-   */
-  set assetsList(assets: Stock[]) {
-    this._assetsList = assets;
   }
 
   /**
@@ -60,15 +55,11 @@ export class Inventary {
    */
   private removeAssets(stock: Stock): void {
     this._assetsList.forEach((element, index) => {
-      if (element[0] === stock[0] && element[1] >= stock[1] ) {
         this._assetsList[index][1] -= stock[1];
         
-        if (this._assetsList[index][1] === 0) {
+        if (this._assetsList[index][1] < 0) {
           this._assetsList.splice(index);
         }
-      } else {
-        throw new Error('No se ha encontrado el bien especificado');
-      }
     });
   }
 
@@ -90,32 +81,32 @@ export class Inventary {
         this.addAssets(asset);
       });
 
-      this._transactions.push(new BuyTransaction(date, assets, "trading", merchant));
+      this._transactions.push(new BuyTransaction(date, assets, merchant));
     } else {
       throw new Error("El mercader al que le quieres comprar no existe.");
     }
   }
 
   // Código en proceso
-  refundBuyAssets(merchant: Merchant, date: Date, ...assets: Stock[]): void {
-    if (db.data.merchants.includes(merchant)) {
-      if (this._transactions.some((trans) => trans instanceof BuyTransaction && trans.type ===))
-
-      assets.forEach((asset) => {
-        if (!db.data.assets.find((asst) => asst === asset[0])) {
-          throw new Error("El bien que quieres comprar no existe.");
-        }
-      });
-
-      assets.forEach((asset) => {
-        this.removeAssets(asset);
-      });
-
-      this._transactions.push(new BuyTransaction(date, assets, "refund", merchant));
-    } else {
-      throw new Error("El mercader al que le quieres devolver la mercancía no existe.");
-    }
-  }
+  //refundBuyAssets(merchant: Merchant, date: Date, ...assets: Stock[]): void {
+  //  if (db.data.merchants.includes(merchant)) {
+  //    if (this._transactions.some((trans) => trans instanceof BuyTransaction && ))
+//
+  //    assets.forEach((asset) => {
+  //      if (!db.data.assets.find((asst) => asst === asset[0])) {
+  //        throw new Error("El bien que quieres comprar no existe.");
+  //      }
+  //    });
+//
+ //     assets.forEach((asset) => {
+   //     this.removeAssets(asset);
+  //    });
+//
+  //    this._transactions.push(new BuyTransaction(date, assets, merchant));
+  //  } else {
+  //    throw new Error("El mercader al que le quieres devolver la mercancía no existe.");
+  //  }
+  //}
 
   /**
    * Vende una serie de bienes a un cliente
@@ -126,7 +117,7 @@ export class Inventary {
   sellAssets(client: Clients, date: Date, ...assets: Stock[]): void {
     if (db.data.clients.includes(client)) {
       assets.forEach((asset) => {
-        if (!this._assetsList.find((stock) => stock[0] === asset[0] && asset[0] <= stock[0] )) {
+        if (!this._assetsList.find((stock) => stock[0] === asset[0] && asset[0] > stock[0] )) {
           throw new Error("El bien que quieres vender no está disponible o no cuenta con el suficiente stock");
         }
       });
@@ -135,7 +126,7 @@ export class Inventary {
         this.removeAssets(asset);
       });
 
-      this._transactions.push(new SellTransaction(date, assets, "trading", client));
+      this._transactions.push(new SellTransaction(date, assets, client));
     } else {
       throw new Error("El cliente al que le quieres vender no existe.");
     }
