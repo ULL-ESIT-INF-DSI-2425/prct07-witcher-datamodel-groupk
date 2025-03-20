@@ -24,6 +24,13 @@ describe("Pruebas de Inventary", () => {
         });
     });
 
+    const transaction1: BuyTransaction = new BuyTransaction(new Date(10, 10, 2025), [[MyAssets.asset3, 5]], MyMerchants.merchant1);
+    const transaction2: BuyTransaction = new BuyTransaction(new Date(10, 10, 2025), [[MyAssets.asset2, 2]], MyMerchants.merchant1);
+    const transaction3: BuyTransaction = new BuyTransaction(new Date(10, 10, 2025), [[MyAssets.asset4, 3], [MyAssets.asset5, 1]], MyMerchants.merchant1);
+    const transaction4: SellTransaction = new SellTransaction(new Date(10, 10, 2025), [[MyAssets.asset2, 2]], MyClients.client1);
+    const transaction5: SellTransaction = new SellTransaction(new Date(10, 10, 2025), [[MyAssets.asset1, 2]], MyClients.client1);
+    const transaction6: SellTransaction = new SellTransaction(new Date(10, 10, 2025), [[MyAssets.asset1, 2]], MyClients.client1);
+
     describe("Pruebas de buyAssets", () => {
         test("El bien no existe", () => {
             const asset: Assets = new Assets("Nombre", "Descripción", ["Material"], 10, 10);
@@ -35,23 +42,17 @@ describe("Pruebas de Inventary", () => {
             expect(() => inventary.buyAssets(merchant, new Date(10, 10, 2025), [MyAssets.asset1, 1])).toThrowError("El mercader al que le quieres comprar no existe.");
         });
 
-        const transaction1: BuyTransaction = new BuyTransaction(new Date(10, 10, 2025), [[MyAssets.asset3, 5]], MyMerchants.merchant1);
-
         test("Añadir asset3 con 5 unidades", () => {
             inventary.buyAssets(MyMerchants.merchant1, new Date(10, 10, 2025), [MyAssets.asset3, 5]);
             expect(inventary.assetsList).toStrictEqual([[MyAssets.asset1, 2], [MyAssets.asset2, 3], [MyAssets.asset3, 5]]);
             expect(inventary.transactions).toStrictEqual([transaction1]);
         });
 
-        const transaction2: BuyTransaction = new BuyTransaction(new Date(10, 10, 2025), [[MyAssets.asset2, 2]], MyMerchants.merchant1);
-
         test("Añadir asset2 con 2 unidades", () => {
             inventary.buyAssets(MyMerchants.merchant1, new Date(10, 10, 2025), [MyAssets.asset2, 2]);
             expect(inventary.assetsList).toStrictEqual([[MyAssets.asset1, 2], [MyAssets.asset2, 5], [MyAssets.asset3, 5]]);
             expect(inventary.transactions).toStrictEqual([transaction1, transaction2]);
         });
-
-        const transaction3: BuyTransaction = new BuyTransaction(new Date(10, 10, 2025), [[MyAssets.asset4, 3], [MyAssets.asset5, 1]], MyMerchants.merchant1);
 
         test("Añadir asset4 con 3 unidades y asset5 con 1 unidad", () => {
             inventary.buyAssets(MyMerchants.merchant1, new Date(10, 10, 2025), [MyAssets.asset4, 3], [MyAssets.asset5, 1]);
@@ -75,30 +76,22 @@ describe("Pruebas de Inventary", () => {
             expect(() => inventary.sellAssets(client, new Date(10, 10, 2025), [MyAssets.asset1, 1])).toThrowError("El cliente al que le quieres vender no existe.");
         });
 
-        const transaction1: SellTransaction = new SellTransaction(new Date(10, 10, 2025), [[MyAssets.asset2, 2]], MyClients.client1);
-
-        test("Eliminar asset2 con 5 unidades", () => {
+        test("Eliminar 2 unidades de asset2", () => {
             inventary.sellAssets(MyClients.client1, new Date(10, 10, 2025), [MyAssets.asset2, 2]);
-            expect(inventary.assetsList).toStrictEqual([[MyAssets.asset1, 2], [MyAssets.asset2, 1]]);
-            expect(inventary.transactions).toStrictEqual([transaction1]);
+            expect(inventary.assetsList).toStrictEqual([[MyAssets.asset1, 2], [MyAssets.asset2, 3], [MyAssets.asset3, 5], [MyAssets.asset4, 3], [MyAssets.asset5, 1]]);
+            expect(inventary.transactions).toStrictEqual([transaction1, transaction2, transaction3, transaction4]);
         });
 
-        const transaction2: SellTransaction = new SellTransaction(new Date(10, 10, 2025), [[MyAssets.asset1, 2]], MyClients.client1);
-
-        test("Añadir asset2 con 2 unidades", () => {
+        test("Eliminar 2 unidades de asset1", () => {
             inventary.sellAssets(MyClients.client1, new Date(10, 10, 2025), [MyAssets.asset1, 2]);
-            expect(inventary.assetsList).toStrictEqual([[MyAssets.asset2, 1]]);
-            expect(inventary.transactions).toStrictEqual([transaction1, transaction2]);
+            expect(inventary.assetsList).toStrictEqual([[MyAssets.asset2, 3], [MyAssets.asset3, 5], [MyAssets.asset4, 3], [MyAssets.asset5, 1]]);
+            expect(inventary.transactions).toStrictEqual([transaction1, transaction2, transaction3, transaction4, transaction5]);
         });
 
-        const transaction3: BuyTransaction = new BuyTransaction(new Date(10, 10, 2025), [[MyAssets.asset4, 3], [MyAssets.asset5, 1]], MyMerchants.merchant1);
-        const transaction4: SellTransaction = new SellTransaction(new Date(10, 10, 2025), [[MyAssets.asset1, 2]], MyClients.client1);
-
-        test("Añadir asset4 con 3 unidades y asset5 con 1 unidad", () => {
-            inventary.buyAssets(MyMerchants.merchant1, new Date(10, 10, 2025), [MyAssets.asset4, 3], [MyAssets.asset5, 1])
+        test("Añadir y eliminar asset4 con 3 unidades y asset5 con 1 unidad", () => {
             inventary.sellAssets(MyClients.client1, new Date(10, 10, 2025), [MyAssets.asset4, 1], [MyAssets.asset5, 1]);
             expect(inventary.assetsList).toStrictEqual([[MyAssets.asset2, 1], [MyAssets.asset4, 2]]);
-            expect(inventary.transactions).toStrictEqual([transaction1, transaction2, transaction3, transaction4]);
+            expect(inventary.transactions).toStrictEqual([transaction1, transaction2, transaction3, transaction4, transaction5, transaction6]);
         });
     });
 });

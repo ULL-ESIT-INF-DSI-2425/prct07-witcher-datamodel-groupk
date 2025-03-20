@@ -55,10 +55,12 @@ export class Inventary {
    */
   private removeAssets(stock: Stock): void {
     this._assetsList.forEach((element, index) => {
-        this._assetsList[index][1] -= stock[1];
-        
-        if (this._assetsList[index][1] < 0) {
-          this._assetsList.splice(index);
+        if (element[0] === stock[0]) {
+          element[1] -= stock[1];
+
+          if (element[1] <= 0) {
+            this._assetsList.splice(index);
+          }
         }
     });
   }
@@ -117,7 +119,7 @@ export class Inventary {
   sellAssets(client: Clients, date: Date, ...assets: Stock[]): void {
     if (db.data.clients.includes(client)) {
       assets.forEach((asset) => {
-        if (!this._assetsList.find((stock) => stock[0] === asset[0] && asset[0] > stock[0] )) {
+        if (!this._assetsList.find((stock) => stock[0] === asset[0] && asset[1] <= stock[1] )) {
           throw new Error("El bien que quieres vender no está disponible o no cuenta con el suficiente stock");
         }
       });
