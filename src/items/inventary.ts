@@ -8,6 +8,8 @@ import { BuyTransaction } from "../transactions/buyTransaction.js";
 import { SellTransaction } from "../transactions/sellTransation.js";
 import { RefundBuyTransaction } from "../transactions/refundBuyTransaction.js";
 import { RefundSellTransaction } from "../transactions/refundSellTransaction.js";
+import { Assets } from "./asset.js";
+import _ from 'lodash';
 
 /**
  * Clase Inventary. Representa un inventario compuesto de bienes, mercaderes y clientes
@@ -41,7 +43,7 @@ export class Inventary {
    * @param stock - Bien y su cantidad a añadir
    */
   private addAssets(stock: Stock): void {
-    if (this._assetsList.some((asset) => asset[0] === stock[0])) {
+    if (this._assetsList.some((asset) => _.isEqual(asset[0], stock[0]))) {
       const index: number = this._assetsList.findIndex((asset) => asset[0] === stock[0]);
       this._assetsList[index][1] += stock[1];
     } else {
@@ -55,11 +57,11 @@ export class Inventary {
    */
   private removeAssets(stock: Stock): void {
     this._assetsList.forEach((element, index) => {
-        if (element[0] === stock[0]) {
+        if (_.isEqual(element[0], stock[0])) {
           element[1] -= stock[1];
 
           if (element[1] <= 0) {
-            this._assetsList.splice(index);
+            this._assetsList.splice(index, 1);
           }
         }
     });
@@ -74,13 +76,13 @@ export class Inventary {
   buyAssets(merchant: Merchant, date: Date, ...assets: Stock[]): void {
     if (db.data.merchants.includes(merchant)) {
       assets.forEach((asset) => {
-        if (!db.data.assets.find((asst) => asst === asset[0])) {
+        if (!db.data.assets.some((asst) => asst === asset[0])) {
           throw new Error("El bien que quieres comprar no existe.");
         }
       });
 
       assets.forEach((asset) => {
-        this.addAssets(asset);
+        this.addAssets([asset[0].clone(), asset[1]]);
       });
 
       this._transactions.push(new BuyTransaction(date, assets, merchant));
@@ -119,7 +121,7 @@ export class Inventary {
   sellAssets(client: Clients, date: Date, ...assets: Stock[]): void {
     if (db.data.clients.includes(client)) {
       assets.forEach((asset) => {
-        if (!this._assetsList.find((stock) => stock[0] === asset[0] && asset[1] <= stock[1] )) {
+        if (!this._assetsList.some((stock) => _.isEqual(stock[0], asset[0]) && asset[1] <= stock[1] )) {
           throw new Error("El bien que quieres vender no está disponible o no cuenta con el suficiente stock");
         }
       });

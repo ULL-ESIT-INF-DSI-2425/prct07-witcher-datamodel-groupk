@@ -3,7 +3,7 @@
  */
 export class Assets {
 
-    private readonly _id: number;
+    private _id: number;
     private static _idCount: number = 1; 
   
     /**
@@ -15,7 +15,7 @@ export class Assets {
      * @param _crowns - Valor en coronas del bien
      */
     constructor(
-      public name: string, 
+      private _name: string, 
       private _description: string, 
       private _materials: string[],
       private _weight: number,
@@ -25,7 +25,7 @@ export class Assets {
         throw new Error("El peso del bien ha de ser mayor que 0.");
       } else if (_crowns < 0) {
         throw new Error("El número de coronas no puede ser negativos.");
-      } else if (name === "") {
+      } else if (_name === "") {
         throw new Error("El nombre no puede estar vacío.");
       } else if (_description === "") {
         throw new Error("El descripción no puede estar vacía.");
@@ -35,6 +35,35 @@ export class Assets {
   
       this._id = Assets._idCount;
       Assets._idCount++;
+    }
+
+    /**
+     * Getter de id
+     */
+    get id() {
+      return this._id;
+    }
+
+    /**
+     * Setter de id
+     * @param id - Nuevo ID
+     */
+    private setId(id: number): void {
+      this._id = id;
+    }
+
+    /**
+     * Getter de name
+     */
+    get name() {
+      return this._name;
+    }
+
+    /**
+     * Setter de name
+     */
+    set name(name: string) {
+      this._name = name;
     }
   
     /**
@@ -91,5 +120,11 @@ export class Assets {
      */
     set crowns(crowns: number) {
       this._crowns = crowns;
+    }
+
+    clone(): Assets {
+      const asset: Assets = new Assets(this._name, this._description, this._materials, this._weight, this._crowns);
+      asset.setId(this._id);
+      return asset;
     }
   }
