@@ -23,18 +23,20 @@ const defaultData: Data = {
                 MyMerchants.merchant6, MyMerchants.merchant7, MyMerchants.merchant8, MyMerchants.merchant9, MyMerchants.merchant10 ], 
 
     clients: [ MyClients.client1, MyClients.client2, MyClients.client3, MyClients.client4, MyClients.client5, 
-               MyClients.client6, MyClients.client7, MyClients.client8, MyClients.client9, MyClients.client10 ]
+              MyClients.client6, MyClients.client7, MyClients.client8, MyClients.client9, MyClients.client10 ]
 };
 
-export let db = new Low<Data>(new JSONFile('db.json'), defaultData);
+export let db = new Low<Data>(new JSONFile('src/database/db.json'), defaultData);
 
 /**
  * Inicializamos la base de datos con los valores por defecto.
  */
 export async function initDB() {
   await db.read();
-  db.data ||= defaultData; 
-  await db.write();
+  if (!db.data) {
+    db.data = JSON.parse(JSON.stringify(defaultData));
+    await db.write();
+  }
 }
 
 /**
@@ -69,7 +71,14 @@ export async function updateAsset(name: string, updated_data: Partial<Assets>) {
   await initDB();
   const index = db.data.assets.findIndex((asset: Assets) => asset.name === name);
   if (index !== -1) {
-    db.data.assets[index] = { ...db.data.assets[index], ...updated_data };
+    const old_asset_data = db.data.assets[index];
+    db.data.assets[index] = new Assets(
+      updated_data.name ?? old_asset_data.name,
+      updated_data.description ?? old_asset_data.description,
+      updated_data.materials !== undefined ? updated_data.materials : old_asset_data.materials,
+      updated_data.weight ?? old_asset_data.weight,
+      updated_data.crowns ?? old_asset_data.crowns
+    );
     await db.write();
   }
 }
@@ -103,7 +112,12 @@ export async function updateMerchant(name: string, updated_data: Partial<Merchan
   await initDB();
   const index = db.data.merchants.findIndex((merchant: Merchant) => merchant.name === name);
   if (index !== -1) {
-    db.data.merchants[index] = { ...db.data.merchants[index], ...updated_data };
+    const old_merchant_data = db.data.merchants[index];
+    db.data.merchants[index] = new Merchant(
+      updated_data.name ?? old_merchant_data.name,
+      updated_data.location ?? old_merchant_data.location,
+      updated_data.type ?? old_merchant_data.type
+    );
     await db.write(); 
   } 
 }
@@ -137,7 +151,12 @@ export async function updateClient(name: string, updated_data: Partial<Clients>)
   await initDB();
   const index = db.data.clients.findIndex((client: Clients) => client.name === name);
   if (index !== -1) {
-    db.data.clients[index] = { ...db.data.clients[index], ...updated_data };
+    const old_client_data = db.data.clients[index];
+    db.data.clients[index] = new Clients(
+      updated_data.name ?? old_client_data.name,
+      updated_data.location ?? old_client_data.location,
+      updated_data.race ?? old_client_data.race
+    );
     await db.write();
   }
 }

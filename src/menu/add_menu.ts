@@ -1,12 +1,10 @@
 import inquirer from "inquirer";
-import { Inventary } from "../items/inventary.js";
 import { Assets } from "../items/asset.js";
 import { Merchant } from "../characters/merchant.js";
 import { Clients } from "../characters/client.js";
 import * as Enums from "../enums/types-and-races.js";
-import { addAsset, addMerchant, addClient } from "../database/database.js";;
-
-const inventary = new Inventary([]);
+import { addAsset, addMerchant, addClient } from "../database/database.js";
+import { menu } from "./menu.js";
 
 export async function addMenu() {
   const { option } = await inquirer.prompt([
@@ -35,7 +33,7 @@ export async function addMenu() {
       const merchant = await inquirer.prompt([
         {type: "input", name: "name", message: "Nombre del mercader:" },
         {type: "input", name: "location", message: "Ubicación:" },
-        {type: "list", name: "type", message: "Tipo: ", choices: Object.values(Enums.Type)},
+        {type: "list", name: "type", message: "Tipo: ", choices: Object.values(Enums.Type).filter(value => isNaN(Number(value))).map(String)},
       ]);
       
       await addMerchant(new Merchant(merchant.name, merchant.location, merchant.type));
@@ -45,13 +43,14 @@ export async function addMenu() {
       const client = await inquirer.prompt([
         {type: "input", name: "name", message: "Nombre del cliente:" },
         {type: "input", name: "location", message: "Ubicación:" },
-        {type: "list", name: "race", message: "Raza: ", choices: Object.values(Enums.Race)},
+        {type: "list", name: "race", message: "Raza: ", choices: Object.values(Enums.Race).filter(value => isNaN(Number(value))).map(String)},
       ]);
       
       await addClient(new Clients(client.name, client.location, client.race));
       break;
 
     case "Volver atrás":
+      menu();
       return;
   }
   

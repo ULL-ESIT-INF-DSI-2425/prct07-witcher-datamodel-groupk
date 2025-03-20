@@ -1,7 +1,9 @@
 import inquirer from "inquirer";
-import { Inventary } from "../items/inventary.js";
+import { addMenu } from "./add_menu.js";
+import { removeMenu } from "./remove_menu.js";
+import { modifyMenu } from "./modify_menu.js";
 
-async function menu() {
+export async function menu() {
   const { option } = await inquirer.prompt([
     {
       type: "list",
@@ -10,4 +12,24 @@ async function menu() {
       choices: ["Añadir", "Eliminar", "Modificar", "Consultar información", "Salir"],
     },
   ]);
+
+  switch (option) {
+    case "Añadir":
+      await addMenu();
+      break;
+
+    case "Eliminar":
+      await removeMenu();
+      break;
+
+    case "Modificar":
+      await modifyMenu();
+      break;
+
+    case "Salir":
+      console.log("Saliendo del sistema...");
+      process.exit();
+  }
 }
+
+await menu(); 
