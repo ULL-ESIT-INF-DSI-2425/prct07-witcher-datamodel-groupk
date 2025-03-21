@@ -1,6 +1,6 @@
 import { Transaction } from "../transactions/transaction.js";
 import { Clients } from "../characters/client.js";
-import { Stock } from "../types/stock.js";
+import { Assets } from "../items/asset.js";
 import { Date } from "../utils/date.js";
 
 /**
@@ -12,10 +12,11 @@ export class SellTransaction extends Transaction {
      * Constructor de SellTransaction
      * @param date - Fecha de la transacción
      * @param assets - Bienes vendidos
+     * @param quantity - Cantidad de cada bien
      * @param _client - Cliente al que se realiza la venta
      */
-    constructor(date: Date, assets: Stock[], private readonly _client: Clients) {
-        super(date, assets);
+    constructor(date: Date, assets: Assets[], quantity: number[], private readonly _client: Clients) {
+        super(date, assets, quantity);
         this._crowns *= 1.2;
     }
 

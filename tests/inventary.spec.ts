@@ -24,12 +24,13 @@ describe("Pruebas de Inventary", () => {
         });
     });
 
-    const transaction1: BuyTransaction = new BuyTransaction(new Date(10, 10, 2025), [[MyAssets.asset3, 5]], MyMerchants.merchant1);
-    const transaction2: BuyTransaction = new BuyTransaction(new Date(10, 10, 2025), [[MyAssets.asset2, 2]], MyMerchants.merchant1);
-    const transaction3: BuyTransaction = new BuyTransaction(new Date(10, 10, 2025), [[MyAssets.asset4, 3], [MyAssets.asset5, 1]], MyMerchants.merchant1);
-    const transaction4: SellTransaction = new SellTransaction(new Date(10, 10, 2025), [[MyAssets.asset2, 2]], MyClients.client1);
-    const transaction5: SellTransaction = new SellTransaction(new Date(10, 10, 2025), [[MyAssets.asset1, 2]], MyClients.client1);
-    const transaction6: SellTransaction = new SellTransaction(new Date(10, 10, 2025), [[MyAssets.asset4, 1], [MyAssets.asset5, 1]], MyClients.client1);
+    const transaction1: BuyTransaction = new BuyTransaction(new Date(10, 10, 2025), [MyAssets.asset3], [5], MyMerchants.merchant1);
+    const transaction2: BuyTransaction = new BuyTransaction(new Date(10, 10, 2025), [MyAssets.asset2], [2], MyMerchants.merchant1);
+    const transaction3: BuyTransaction = new BuyTransaction(new Date(10, 10, 2025), [MyAssets.asset4, MyAssets.asset5], [3, 1], MyMerchants.merchant1);
+    const transaction4: SellTransaction = new SellTransaction(new Date(10, 10, 2025), [MyAssets.asset2], [2], MyClients.client1);
+    const transaction5: SellTransaction = new SellTransaction(new Date(10, 10, 2025), [MyAssets.asset1], [2], MyClients.client1);
+    const transaction6: SellTransaction = new SellTransaction(new Date(10, 10, 2025), [MyAssets.asset4, MyAssets.asset5], [1, 1], MyClients.client1);
+    const transaction7: SellTransaction = new SellTransaction(new Date(10, 10, 2025), [MyAssets.asset2, MyAssets.asset3], [1, 3], MyClients.client1);
 
     describe("Pruebas de buyAssets", () => {
         test("El bien no existe", () => {
@@ -93,6 +94,12 @@ describe("Pruebas de Inventary", () => {
             expect(inventary.assetsList).toStrictEqual([[MyAssets.asset2, 3], [MyAssets.asset3, 5], [MyAssets.asset4, 2]]);
             expect(inventary.transactions).toStrictEqual([transaction1, transaction2, transaction3, transaction4, transaction5, transaction6]);
         });
+
+        test("Eliminar asset4 con 2 unidades y asset5 con 1 unidad", () => {
+            inventary.sellAssets(MyClients.client1, new Date(10, 10, 2025), [MyAssets.asset2, 1], [MyAssets.asset3, 3]);
+            expect(inventary.assetsList).toStrictEqual([[MyAssets.asset2, 2], [MyAssets.asset3, 2], [MyAssets.asset4, 2]]);
+            expect(inventary.transactions).toStrictEqual([transaction1, transaction2, transaction3, transaction4, transaction5, transaction6, transaction7]);
+        });
     });
 
     describe("Pruebas de funciones de informes", () => {
@@ -120,18 +127,18 @@ describe("Pruebas de Inventary", () => {
             expect(summary).toStrictEqual({ totalIncome: 4920, totalExpenses: 3300 });
           });
 
-        test("getTransactionHistoryForClient", () => {
-            const history = inventary.getTransactionHistoryForClient(MyClients.client1);
+        test("getTransactionHistoryForMerchant", () => {
+            const history = inventary.getTransactionHistoryForMerchant(MyMerchants.merchant1);
             expect(history.length).toBe(3);
             history.forEach((trans) => {
-              expect(trans).toBeInstanceOf(SellTransaction);
-              expect((trans as SellTransaction).client).toBe(MyClients.client1);
+              expect(trans).toBeInstanceOf(BuyTransaction);
+              expect((trans as BuyTransaction).merchant).toBe(MyMerchants.merchant1);
             });
           });
 
         test("getTransactionHistoryForClient", () => {
             const history = inventary.getTransactionHistoryForClient(MyClients.client1);
-            expect(history.length).toBe(3);
+            expect(history.length).toBe(4);
             history.forEach((trans) => {
                 expect(trans).toBeInstanceOf(SellTransaction);
                 expect((trans as SellTransaction).client).toBe(MyClients.client1);

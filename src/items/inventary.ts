@@ -81,11 +81,16 @@ export class Inventary {
         }
       });
 
+      const goods: Assets[] = [];
+      const quantity: number[] = [];
+
       assets.forEach((asset) => {
-        this.addAssets([asset[0].clone(), asset[1]]);
+        this.addAssets(asset);
+        goods.push(asset[0]);
+        quantity.push(asset[1]);
       });
 
-      this._transactions.push(new BuyTransaction(date, assets, merchant));
+      this._transactions.push(new BuyTransaction(date, goods, quantity, merchant));
     } else {
       throw new Error("El mercader al que le quieres comprar no existe.");
     }
@@ -126,11 +131,16 @@ export class Inventary {
         }
       });
 
+      const goods: Assets[] = [];
+      const quantity: number[] = [];
+
       assets.forEach((asset) => {
         this.removeAssets(asset);
+        goods.push(asset[0]);
+        quantity.push(asset[1]);
       });
 
-      this._transactions.push(new SellTransaction(date, assets, client));
+      this._transactions.push(new SellTransaction(date, goods, quantity, client));
     } else {
       throw new Error("El cliente al que le quieres vender no existe.");
     }

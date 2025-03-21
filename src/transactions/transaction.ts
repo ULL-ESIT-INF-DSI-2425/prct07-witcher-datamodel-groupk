@@ -1,3 +1,4 @@
+import { Assets } from "../items/asset.js";
 import { Stock } from "../types/stock.js";
 import { Date } from "../utils/date.js"
 
@@ -11,10 +12,17 @@ export abstract class Transaction {
    * Constructor de Transaction
    * @param _date - Fecha en la que se realizó la transacción
    * @param _exchangeAssets - Bienes que son intercambiados
+   * @param _quantity - Cantidad de cada bien
    */
-  constructor(protected readonly _date: Date, protected readonly _exchangeAssets: Stock[]) {
-    _exchangeAssets.forEach((asset) => {
-      this._crowns += asset[0].crowns * asset[1];
+  constructor(protected readonly _date: Date, protected readonly _exchangeAssets: Assets[], protected readonly _quantity: number[]) {
+    if (_exchangeAssets.length !== _quantity.length) {
+      throw new Error("Cada bien tiene que tener especificada una cantidad específica.");
+    } else if (_exchangeAssets.length === 0) {
+      throw new Error("La transacción debe de tener al menos un bien.");
+    }
+    
+    _exchangeAssets.forEach((asset, index) => {
+      this._crowns += asset.crowns * _quantity[index];
     });
    }
 
@@ -34,8 +42,15 @@ export abstract class Transaction {
 
    /**
     * Getter de exchangeAssets
+    * @returns Lista de bienes y sus respectivas cantidades
     */
-   get exchangeAssets() {
-    return this._exchangeAssets;
+   getExchangeAssets(): Stock[] {
+    const assetQuantity: Stock[] = [];
+
+    this._exchangeAssets.forEach((elem, index) => {
+      assetQuantity.push([elem, this._quantity[index]]);
+    });
+
+    return assetQuantity;
    }
 }
