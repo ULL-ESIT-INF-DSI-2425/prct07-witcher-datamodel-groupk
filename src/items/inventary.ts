@@ -218,13 +218,14 @@ export class Inventary {
   }
   
   getBestSellingAssets(): { asset: Assets; sold: number }[] {
-    let salesRecords: { asset: Assets; sold: number }[] = [];
+    const salesRecords: { asset: Assets; sold: number }[] = [];
     for (let i = 0; i < this._transactions.length; i++) {
       const trans = this._transactions[i];
       if (trans instanceof SellTransaction) {
-        for (let j = 0; j < trans.exchangeAssets.length; j++) {
-          const asset = trans.exchangeAssets[j][0];
-          const quantity = trans.exchangeAssets[j][1];
+        const exchangeAssets: Stock[] = trans.getExchangeAssets();
+        for (let j = 0; j < exchangeAssets.length; j++) {
+          const asset = exchangeAssets[j][0];
+          const quantity = exchangeAssets[j][1];
           let found = false;
           for (let k = 0; k < salesRecords.length; k++) {
             if (salesRecords[k].asset === asset) {
