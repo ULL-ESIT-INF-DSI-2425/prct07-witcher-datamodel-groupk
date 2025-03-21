@@ -96,26 +96,51 @@ export class Inventary {
     }
   }
 
-  // Código en proceso
-  //refundBuyAssets(merchant: Merchant, date: Date, ...assets: Stock[]): void {
-  //  if (db.data.merchants.includes(merchant)) {
-  //    if (this._transactions.some((trans) => trans instanceof BuyTransaction && ))
-//
-  //    assets.forEach((asset) => {
-  //      if (!db.data.assets.find((asst) => asst === asset[0])) {
-  //        throw new Error("El bien que quieres comprar no existe.");
-  //      }
-  //    });
-//
- //     assets.forEach((asset) => {
-   //     this.removeAssets(asset);
-  //    });
-//
-  //    this._transactions.push(new BuyTransaction(date, assets, merchant));
-  //  } else {
-  //    throw new Error("El mercader al que le quieres devolver la mercancía no existe.");
-  //  }
-  //}
+  /**
+   * Realiza la devolución de bienes a un mercader
+   * @param merchant - Mercader al que pedirle la devolución
+   * @param date - Fecha en la que se realiza la devolución
+   * @param assets - Bienes a devolver
+   */
+  refundBuyAssets(merchant: Merchant, date: Date, ...assets: Stock[]): void {
+    const goods: Assets[] = [];
+    const quantity: number[] = [];
+
+    let qnt: number;
+    
+    assets.forEach((asset) => {
+      qnt = 0;
+
+      if (!this._assetsList.some((stock) => stock[0] === asset[0] && stock[1] >= asset[1])) {
+        throw new Error("No tienes del bien que quieres devolver.");
+      }
+
+      this._transactions.forEach((trans) => {
+        if (trans instanceof BuyTransaction && trans.merchant === merchant && trans.date.isLowerOrEqualThan(date)) {
+          trans.getExchangeAssets().forEach((good) => {
+            if (good[0] === asset[0]) {
+              qnt += good[1];
+            }
+          });
+        }
+      });
+
+      if (qnt === 0) {
+        throw new Error("No se realizó ninguna transacción sobre algún bien hasta el momento con ese mercader hasta el momento.");
+      } else if (qnt < asset[1]) {
+        throw new Error("Entre todas las compras a ese mercader, no se compró tanta cantidad de uno de los bienes.");
+      }
+
+      this.removeAssets(asset);
+      goods.push(asset[0]);
+      quantity.push(asset[1]);
+    });
+
+    console.log(goods.length)
+    console.log(quantity.length)
+
+    this._transactions.push(new RefundBuyTransaction(date, goods, quantity, merchant));
+  }
 
   /**
    * Vende una serie de bienes a un cliente
@@ -144,6 +169,49 @@ export class Inventary {
     } else {
       throw new Error("El cliente al que le quieres vender no existe.");
     }
+  }
+
+  /**
+   * Desembolsa bienes a un cliente
+   * @param client - Cliente al que hacer la devolución
+   * @param date - Fecha en la que se realizó la devolución
+   * @param assets - Bienes a reembolsar
+   */
+  refundSellAssets(client: Clients, date: Date, ...assets: Stock[]): void {
+    const goods: Assets[] = [];
+    const quantity: number[] = [];
+
+    let qnt: number;
+    
+    assets.forEach((asset) => {
+      qnt = 0;
+
+      this._transactions.forEach((trans) => {
+        if (trans instanceof SellTransaction && trans.client === client && trans.date.isLowerOrEqualThan(date)) {
+          trans.getExchangeAssets().forEach((good) => {
+            if (good[0] === asset[0]) {
+              qnt += good[1];
+            }
+          });
+        }
+      });
+
+      if (qnt === 0) {
+        throw new Error("No se realizó ninguna transacción sobre algún bien hasta el momento.");
+      } else if (qnt < asset[1]) {
+        throw new Error("Entre todas las compras a ese mercader, no se compró tanta cantidad de uno de los bienes.");
+      }
+
+      quantity.push(qnt);
+    });
+
+    assets.forEach((asset) => {
+      this.addAssets(asset);
+      goods.push(asset[0]);
+      quantity.push(asset[1]);
+    });
+
+    this._transactions.push(new RefundSellTransaction(date, goods, quantity, client));
   }
 
   getStockReport(filter?: (stock: Stock) => boolean): Stock[] {

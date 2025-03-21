@@ -48,4 +48,45 @@ describe("Pruebas de Date", () => {
             expect(() => new Date(1, 0, 0)).toThrowError("Formato de fecha incorrecto.");
         });
     });
+
+    const date1: Date = new Date(10, 10, 2025);
+    const date2: Date = new Date(8, 10, 2025);
+    const date3: Date = new Date(21, 7, 2025);
+    const date4: Date = new Date(15, 2, 2023);
+
+    describe("Pruebas de getDate", () => {
+        test("10/10/2025", () => {
+            expect(date1.getDate()).toStrictEqual("10/10/2025");
+        });
+
+        test("8/10/2025", () => {
+            expect(date2.getDate()).toStrictEqual("8/10/2025");
+        });
+
+        test("21/7/2025", () => {
+            expect(date3.getDate()).toStrictEqual("21/7/2025");
+        });
+
+        test("15/2/2023", () => {
+            expect(date4.getDate()).toStrictEqual("15/2/2023");
+        });
+    });
+
+    describe("Pruebas de isLowerOrEqualThan", () => {
+        test("10/10/2025 > 8/10/2025", () => {
+            expect(date1.isLowerOrEqualThan(date2)).toStrictEqual(false);
+        });
+
+        test("8/10/2025 > 21/7/2025", () => {
+            expect(date2.isLowerOrEqualThan(date3)).toStrictEqual(false);
+        });
+
+        test("21/7/2025 <= 10/10/2025", () => {
+            expect(date3.isLowerOrEqualThan(date1)).toStrictEqual(true);
+        });
+
+        test("15/2/2023 <= 8/10/2025", () => {
+            expect(date4.isLowerOrEqualThan(date2)).toStrictEqual(true);
+        });
+    });
 });
