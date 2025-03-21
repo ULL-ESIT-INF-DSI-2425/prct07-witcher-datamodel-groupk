@@ -3,8 +3,8 @@
  */
 export class Assets {
 
-    private _id: number;
-    private static _idCount: number = 1; 
+    private readonly _id: number; // ID único del bien
+    private static _idCount: number = 1; // Cuenta de IDs que se van asignando cada vez que se crea un nuevo objeto
   
     /**
      * Constructor de Assets
@@ -42,14 +42,6 @@ export class Assets {
      */
     get id() {
       return this._id;
-    }
-
-    /**
-     * Setter de id
-     * @param id - Nuevo ID
-     */
-    private setId(id: number): void {
-      this._id = id;
     }
 
     /**
@@ -120,11 +112,5 @@ export class Assets {
      */
     set crowns(crowns: number) {
       this._crowns = crowns;
-    }
-
-    clone(): Assets {
-      const asset: Assets = new Assets(this._name, this._description, this._materials, this._weight, this._crowns);
-      asset.setId(this._id);
-      return asset;
     }
   }

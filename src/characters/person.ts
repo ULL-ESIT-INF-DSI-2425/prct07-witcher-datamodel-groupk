@@ -3,7 +3,7 @@
  */
 export abstract class Person {
 
-    protected _id: number;
+    protected _id: number; // ID único de la persona
   
     /**
      * Costructor de Person

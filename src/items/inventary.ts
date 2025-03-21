@@ -136,9 +136,6 @@ export class Inventary {
       quantity.push(asset[1]);
     });
 
-    console.log(goods.length)
-    console.log(quantity.length)
-
     this._transactions.push(new RefundBuyTransaction(date, goods, quantity, merchant));
   }
 

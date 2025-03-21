@@ -6,7 +6,7 @@ import * as Enums from "../enums/types-and-races.js";
  */
 export class Clients extends Person {
 
-  private static _idCount = 1;
+  private static _idCount = 1; // Cuenta de IDs que se van asignando cada vez que se crea un nuevo objeto
   
     /**
      * Constructor de Clients
