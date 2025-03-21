@@ -126,7 +126,7 @@ export class Inventary {
       });
 
       if (qnt === 0) {
-        throw new Error("No se realizó ninguna transacción sobre algún bien hasta el momento con ese mercader hasta el momento.");
+        throw new Error("No se realizó ninguna transacción sobre algún bien con ese mercader hasta el momento.");
       } else if (qnt < asset[1]) {
         throw new Error("Entre todas las compras a ese mercader, no se compró tanta cantidad de uno de los bienes.");
       }
@@ -197,15 +197,11 @@ export class Inventary {
       });
 
       if (qnt === 0) {
-        throw new Error("No se realizó ninguna transacción sobre algún bien hasta el momento.");
+        throw new Error("No se realizó ninguna transacción sobre algún bien con ese cliente hasta el momento.");
       } else if (qnt < asset[1]) {
-        throw new Error("Entre todas las compras a ese mercader, no se compró tanta cantidad de uno de los bienes.");
+        throw new Error("Entre todas las ventas a ese cliente, no se compró tanta cantidad de uno de los bienes.");
       }
 
-      quantity.push(qnt);
-    });
-
-    assets.forEach((asset) => {
       this.addAssets(asset);
       goods.push(asset[0]);
       quantity.push(asset[1]);

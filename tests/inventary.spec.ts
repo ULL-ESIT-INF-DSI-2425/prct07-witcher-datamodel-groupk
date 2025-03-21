@@ -11,6 +11,7 @@ import { SellTransaction } from "../src/transactions/sellTransation.js";
 import { Merchant } from "../src/characters/merchant.js";
 import { Clients } from "../src/characters/client.js";
 import { RefundBuyTransaction } from "../src/transactions/refundBuyTransaction.js";
+import { RefundSellTransaction } from "../src/transactions/refundSellTransaction.js";
 
 const inventary: Inventary = new Inventary([[MyAssets.asset1, 2], [MyAssets.asset2, 3]]);
 
@@ -114,6 +115,10 @@ describe("Pruebas de Inventary", () => {
     const transaction10: RefundBuyTransaction = new RefundBuyTransaction(new Date(11, 10, 2025), [MyAssets.asset2], [2], MyMerchants.merchant1);
     const transaction11: RefundBuyTransaction = new RefundBuyTransaction(new Date(12, 10, 2025), [MyAssets.asset4, MyAssets.asset6], [1, 1], MyMerchants.merchant1);
     const transaction12: RefundBuyTransaction = new RefundBuyTransaction(new Date(12, 10, 2025), [MyAssets.asset4], [1], MyMerchants.merchant1);
+    const transaction13: RefundSellTransaction = new RefundSellTransaction(new Date(10, 10, 2025), [MyAssets.asset3], [3], MyClients.client2);
+    const transaction14: RefundSellTransaction = new RefundSellTransaction(new Date(11, 10, 2025), [MyAssets.asset1], [1], MyClients.client1);
+    const transaction15: RefundSellTransaction = new RefundSellTransaction(new Date(12, 10, 2025), [MyAssets.asset4, MyAssets.asset5], [1, 1], MyClients.client1);
+    const transaction16: RefundSellTransaction = new RefundSellTransaction(new Date(12, 10, 2025), [MyAssets.asset2], [2], MyClients.client1);
 
     describe("Pruebas de refundBuyAssets", () => {
         test("No se tiene uno de los bienes a devolver", () => {
@@ -121,11 +126,11 @@ describe("Pruebas de Inventary", () => {
         });
 
         test("No hay transacciones con ese mercader", () => {
-            expect(() => inventary.refundBuyAssets(MyMerchants.merchant3, new Date(10, 10, 2025), [MyAssets.asset3, 1])).toThrowError("No se realizó ninguna transacción sobre algún bien hasta el momento con ese mercader hasta el momento.");
+            expect(() => inventary.refundBuyAssets(MyMerchants.merchant3, new Date(10, 10, 2025), [MyAssets.asset3, 1])).toThrowError("No se realizó ninguna transacción sobre algún bien con ese mercader hasta el momento.");
         });
 
         test("No hay transacciones con ese mercader hasta el momento", () => {
-            expect(() => inventary.refundBuyAssets(MyMerchants.merchant1, new Date(9, 10, 2025), [MyAssets.asset3, 1])).toThrowError("No se realizó ninguna transacción sobre algún bien hasta el momento con ese mercader hasta el momento.");
+            expect(() => inventary.refundBuyAssets(MyMerchants.merchant1, new Date(9, 10, 2025), [MyAssets.asset3, 1])).toThrowError("No se realizó ninguna transacción sobre algún bien con ese mercader hasta el momento.");
         });
 
         test("Las cantidades que se han comprado de ese mercader son menores que las indicadas", () => {
@@ -158,6 +163,52 @@ describe("Pruebas de Inventary", () => {
             expect(inventary.assetsList).toStrictEqual([[MyAssets.asset2, 1], [MyAssets.asset3, 1]]);
             expect(inventary.transactions).toStrictEqual([transaction1, transaction2, transaction3, transaction4, transaction5, transaction6, 
                                                             transaction7, transaction8, transaction9, transaction10, transaction11, transaction12]);
+        });
+    });
+
+    describe("Pruebas de refundSellAssets", () => {
+        test("No hay transacciones con ese mercader", () => {
+            expect(() => inventary.refundSellAssets(MyClients.client3, new Date(10, 10, 2025), [MyAssets.asset3, 1])).toThrowError("No se realizó ninguna transacción sobre algún bien con ese cliente hasta el momento.");
+        });
+
+        test("No hay transacciones con ese mercader hasta el momento", () => {
+            expect(() => inventary.refundSellAssets(MyClients.client1, new Date(9, 10, 2025), [MyAssets.asset3, 1])).toThrowError("No se realizó ninguna transacción sobre algún bien con ese cliente hasta el momento.");
+        });
+
+        test("Las cantidades que se han comprado de ese mercader son menores que las indicadas", () => {
+            expect(() => inventary.refundSellAssets(MyClients.client2, new Date(10, 10, 2025), [MyAssets.asset3, 5])).toThrowError("Entre todas las ventas a ese cliente, no se compró tanta cantidad de uno de los bienes.");
+        });
+
+        test("Reembolsar 3 unidades de asset3", () => {
+            inventary.refundSellAssets(MyClients.client2, new Date(10, 10, 2025), [MyAssets.asset3, 3]);
+            expect(inventary.assetsList).toStrictEqual([[MyAssets.asset2, 1], [MyAssets.asset3, 4]]);
+            expect(inventary.transactions).toStrictEqual([transaction1, transaction2, transaction3, transaction4, transaction5, transaction6, 
+                                                            transaction7, transaction8, transaction9, transaction10, transaction11, transaction12,
+                                                            transaction13]);
+        });
+
+        test("Reembolsar 1 unidad de asset1", () => {
+            inventary.refundSellAssets(MyClients.client1, new Date(11, 10, 2025), [MyAssets.asset1, 1]);
+            expect(inventary.assetsList).toStrictEqual([[MyAssets.asset2, 1], [MyAssets.asset3, 4], [MyAssets.asset1, 1]]);
+            expect(inventary.transactions).toStrictEqual([transaction1, transaction2, transaction3, transaction4, transaction5, transaction6, 
+                                                            transaction7, transaction8, transaction9, transaction10, transaction11, transaction12,
+                                                            transaction13, transaction14]);
+        });
+
+        test("Reembolsar 1 unidad de asset4 y 1 unidad de asset5", () => {
+            inventary.refundSellAssets(MyClients.client1, new Date(12, 10, 2025), [MyAssets.asset4, 1], [MyAssets.asset5, 1]);
+            expect(inventary.assetsList).toStrictEqual([[MyAssets.asset2, 1], [MyAssets.asset3, 4], [MyAssets.asset1, 1], [MyAssets.asset4, 1], [MyAssets.asset5, 1]]);
+            expect(inventary.transactions).toStrictEqual([transaction1, transaction2, transaction3, transaction4, transaction5, transaction6, 
+                                                            transaction7, transaction8, transaction9, transaction10, transaction11, transaction12,
+                                                            transaction13, transaction14, transaction15]);
+        });
+
+        test("Reembolsar 2 unidad de asset2", () => {
+            inventary.refundSellAssets(MyClients.client1, new Date(12, 10, 2025), [MyAssets.asset2, 2]);
+            expect(inventary.assetsList).toStrictEqual([[MyAssets.asset2, 3], [MyAssets.asset3, 4], [MyAssets.asset1, 1], [MyAssets.asset4, 1], [MyAssets.asset5, 1]]);
+            expect(inventary.transactions).toStrictEqual([transaction1, transaction2, transaction3, transaction4, transaction5, transaction6, 
+                                                            transaction7, transaction8, transaction9, transaction10, transaction11, transaction12,
+                                                            transaction13, transaction14, transaction15, transaction16]);
         });
     });
 
@@ -197,7 +248,7 @@ describe("Pruebas de Inventary", () => {
 
         test("getTransactionHistoryForClient", () => {
             const history = inventary.getTransactionHistoryForClient(MyClients.client1);
-            expect(history.length).toBe(3);
+            expect(history.length).toBe(6);
             history.forEach((trans) => {
                 expect(trans).toBeInstanceOf(SellTransaction);
                 expect((trans as SellTransaction).client).toBe(MyClients.client1);
