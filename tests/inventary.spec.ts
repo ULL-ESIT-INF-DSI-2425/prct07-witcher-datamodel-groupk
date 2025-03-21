@@ -1,4 +1,4 @@
-import { describe, test, expect } from "vitest";
+import { describe, test, expect, beforeEach } from "vitest";
 import { Assets } from "../src/items/asset.js";
 import { Inventary } from "../src/items/inventary.js";
 import { Date } from "../src/utils/date.js";
@@ -159,49 +159,248 @@ describe("Pruebas de Inventary", () => {
             expect(inventary.transactions).toStrictEqual([transaction1, transaction2, transaction3, transaction4, transaction5, transaction6, 
                                                             transaction7, transaction8, transaction9, transaction10, transaction11, transaction12]);
         });
-    });
+    });      
 
-    describe("Pruebas de funciones de informes", () => {
-        // No funcionan (en proceso)
-        // test("getStockReport sin filtro", () => {
-        //     const report = inventary.getStockReport();
-        //     expect(report).toStrictEqual([[MyAssets.asset1, 1], [MyAssets.asset2, 1], [MyAssets.asset3, 5]]);
-        // });
-        
-        // test("getStockReport con filtro", () => {
-        //     const report = inventary.getStockReport((stock) => stock[0].description === "Espada");
-        //     expect(report).toStrictEqual([[MyAssets.asset1, 1], [MyAssets.asset2, 1]]);
-        // });
-        
-        // test("getBestSellingAssets", () => {
-        //     const bestSelling = inventary.getBestSellingAssets();
-        //     expect(bestSelling).toStrictEqual([
-        //     { asset: MyAssets.asset2, sold: 2 },
-        //     { asset: MyAssets.asset1, sold: 1 },
-        //     ]);
-        // });
+    describe("Tests para getStockReport", () => {
 
-        //test("getFinancialSummary", () => {
-        //    const summary = inventary.getFinancialSummary();
-        //    expect(summary).toStrictEqual({ totalIncome: 4920, totalExpenses: 3300 });
-        //  });
-
-        test("getTransactionHistoryForMerchant", () => {
-            const history = inventary.getTransactionHistoryForMerchant(MyMerchants.merchant1);
-            expect(history.length).toBe(8);
-            history.forEach((trans) => {
-              expect(trans).toBeInstanceOf(BuyTransaction);
-              expect((trans as BuyTransaction).merchant).toBe(MyMerchants.merchant1);
-            });
-          });
-
-        test("getTransactionHistoryForClient", () => {
-            const history = inventary.getTransactionHistoryForClient(MyClients.client1);
-            expect(history.length).toBe(3);
-            history.forEach((trans) => {
-                expect(trans).toBeInstanceOf(SellTransaction);
-                expect((trans as SellTransaction).client).toBe(MyClients.client1);
-            });
+        let inventaryInforme: Inventary;
+        beforeEach(() => {
+            inventaryInforme = new Inventary([[MyAssets.asset1, 10],[MyAssets.asset2, 5],[MyAssets.asset7, 3]]);
+            inventaryInforme.sellAssets(MyClients.client1, new Date(1, 1, 2025), [MyAssets.asset1, 2]);
+            inventaryInforme.sellAssets(MyClients.client1, new Date(1, 1, 2025), [MyAssets.asset2, 1]);
+            inventaryInforme.sellAssets(MyClients.client1, new Date(1, 1, 2025), [MyAssets.asset1, 3]);
         });
-    });
+
+        test("getStockReport sin filtro", () => {
+            const report = inventaryInforme.getStockReport();
+            expect(report).toStrictEqual([[MyAssets.asset1, 5], [MyAssets.asset2, 4], [MyAssets.asset7, 3]]);
+        });
+
+        test("getStockReport con filtro", () => {
+            const report = inventaryInforme.getStockReport(
+            (stock) => stock[0].description === "Espada"
+            );
+            expect(report).toStrictEqual([[MyAssets.asset1, 5], [MyAssets.asset2, 4]]);
+        });
+
+        test("Inventario sin ventas, getStockReport devuelve stock original", () => {
+          const inv = new Inventary([[MyAssets.asset1, 5],[MyAssets.asset2, 8]]);
+          const report = inv.getStockReport();
+          expect(report).toStrictEqual([
+            [MyAssets.asset1, 5],
+            [MyAssets.asset2, 8]
+          ]);
+        });
+      
+        test("Filtro que devuelve vacío: getStockReport", () => {
+          const inv = new Inventary([[MyAssets.asset1, 5], [MyAssets.asset2, 8]]);
+          const report = inv.getStockReport(() => false);
+          expect(report).toStrictEqual([]);
+        });
+      
+        test("Filtro que devuelve todos: getStockReport", () => {
+          const inv = new Inventary([[MyAssets.asset1, 5],[MyAssets.asset2, 8]]);
+          const report = inv.getStockReport(() => true);
+          expect(report).toStrictEqual([[MyAssets.asset1, 5],[MyAssets.asset2, 8]]);
+        });
+      
+        test("Inventario modificado con ventas adicionales: getStockReport", () => {
+          const inv = new Inventary([[MyAssets.asset1, 10],[MyAssets.asset2, 6]]);
+          inv.sellAssets(MyClients.client1, new Date(2, 2, 2025), [MyAssets.asset1, 4]);
+          inv.sellAssets(MyClients.client1, new Date(2, 2, 2025), [MyAssets.asset2, 2]);
+          inv.sellAssets(MyClients.client1, new Date(2, 2, 2025), [MyAssets.asset1, 1]);
+          const report = inv.getStockReport();
+          expect(report).toStrictEqual([[MyAssets.asset1, 5],[MyAssets.asset2, 4]]);
+        });
+      
+        test("Filtro por descripción en inventario mixto: getStockReport", () => {
+          const inv = new Inventary([[MyAssets.asset1, 10],[MyAssets.asset2, 8],[MyAssets.asset7, 4]]);
+          const report = inv.getStockReport(
+            (stock) => stock[0].description === "Espada"
+          );
+          expect(report).toStrictEqual([[MyAssets.asset1, 10],[MyAssets.asset2, 8]]);
+        });
+      });
+
+      describe("Tests adicionales para getBestSellingAssets", () => {
+
+        test("Sin ventas, getBestSellingAssets devuelve array vacío", () => {
+          const inv = new Inventary([[MyAssets.asset1, 10], [MyAssets.asset2, 5]]);
+          const bestSelling = inv.getBestSellingAssets();
+          expect(bestSelling).toStrictEqual([]);
+        });
+      
+        test("Ventas múltiples acumuladas para un mismo activo: getBestSellingAssets", () => {
+          const inv = new Inventary([ [MyAssets.asset1, 10], [MyAssets.asset2, 5]]);
+          inv.sellAssets(MyClients.client1, new Date(3, 3, 2025), [MyAssets.asset1, 3]);
+          inv.sellAssets(MyClients.client1, new Date(3, 3, 2025), [MyAssets.asset1, 2]);
+          inv.sellAssets(MyClients.client1, new Date(3, 3, 2025), [MyAssets.asset2, 1]);
+          const bestSelling = inv.getBestSellingAssets();
+          expect(bestSelling).toStrictEqual([{ asset: MyAssets.asset1, sold: 5 }, { asset: MyAssets.asset2, sold: 1 }]);
+        });
+      
+        test("Empate en ventas entre activos: getBestSellingAssets", () => {
+          const inv = new Inventary([ [MyAssets.asset1, 10], [MyAssets.asset2, 10]]);
+          inv.sellAssets(MyClients.client1, new Date(4, 4, 2025), [MyAssets.asset1, 2]);
+          inv.sellAssets(MyClients.client1, new Date(4, 4, 2025), [MyAssets.asset2, 2]);
+          const bestSelling = inv.getBestSellingAssets();
+          expect(bestSelling).toEqual(
+            expect.arrayContaining([ { asset: MyAssets.asset1, sold: 2 }, { asset: MyAssets.asset2, sold: 2 }])
+          );
+          expect(bestSelling.length).toBe(2);
+        });
+      
+        test("Ventas en diferentes transacciones acumuladas: getBestSellingAssets", () => {
+          const inv = new Inventary([ [MyAssets.asset1, 20]]);
+          inv.sellAssets(MyClients.client1, new Date(5, 5, 2025), [MyAssets.asset1, 4]);
+          inv.sellAssets(MyClients.client1, new Date(5, 5, 2025), [MyAssets.asset1, 6]);
+          inv.sellAssets(MyClients.client1, new Date(5, 5, 2025), [MyAssets.asset1, 3]);
+          const bestSelling = inv.getBestSellingAssets();
+          expect(bestSelling).toStrictEqual([{ asset: MyAssets.asset1, sold: 13 }]);
+        });
+      });
+
+      describe("getFinancialSummary", () => {
+        let inv: Inventary;
+        beforeEach(() => {
+          inv = new Inventary([ [MyAssets.asset1, 10], [MyAssets.asset2, 5]]);
+        });
+    
+        test("Sin transacciones, ingresos y gastos son 0", () => {
+          const summary = inv.getFinancialSummary();
+          expect(summary).toStrictEqual({ totalIncome: 0, totalExpenses: 0 });
+        });
+    
+        test("Solo ventas: calcular ingresos correctamente", () => {
+          inv.sellAssets(MyClients.client1, new Date(10,10,2025), [MyAssets.asset1, 1]);
+          inv.sellAssets(MyClients.client1, new Date(10,10,2025), [MyAssets.asset2, 1]);
+          const summary = inv.getFinancialSummary();
+          expect(summary).toStrictEqual({ totalIncome: 840 + 960, totalExpenses: 0 });
+        });
+    
+        test("Solo compras: calcular gastos correctamente", () => {
+          inv.buyAssets(MyMerchants.merchant1, new Date(10,10,2025), [MyAssets.asset1, 2]);
+          inv.buyAssets(MyMerchants.merchant1, new Date(10,10,2025), [MyAssets.asset2, 1]);
+          const summary = inv.getFinancialSummary();
+          expect(summary).toStrictEqual({ totalIncome: 0, totalExpenses: 1400 + 800 });
+        });
+    
+        test("Combinación de venta y compra", () => {
+          inv.buyAssets(MyMerchants.merchant1, new Date(10,10,2025), [MyAssets.asset1, 2]);
+          inv.sellAssets(MyClients.client1, new Date(10,10,2025), [MyAssets.asset1, 1]);
+          const summary = inv.getFinancialSummary();
+          expect(summary).toStrictEqual({ totalIncome: 840, totalExpenses: 1400 });
+        });
+    
+        test("Varias transacciones combinadas", () => {
+          inv.buyAssets(MyMerchants.merchant1, new Date(10,10,2025), [MyAssets.asset1, 3]);
+          inv.buyAssets(MyMerchants.merchant1, new Date(10,10,2025), [MyAssets.asset2, 2]);
+          inv.sellAssets(MyClients.client1, new Date(10,10,2025), [MyAssets.asset1, 2]);
+          inv.sellAssets(MyClients.client1, new Date(10,10,2025), [MyAssets.asset2, 1]);
+          const summary = inv.getFinancialSummary();
+          expect(summary).toStrictEqual({ totalIncome: 1680 + 960, totalExpenses: 2100 + 1600 });
+        });
+      });
+
+      describe("getTransactionHistoryForMerchant", () => {
+        let inv: Inventary;
+        beforeEach(() => {
+          inv = new Inventary([ [MyAssets.asset1, 10], [MyAssets.asset2, 5]]);
+        });
+    
+        test("Sin transacciones para el mercader, devuelve array vacío", () => {
+          const history = inv.getTransactionHistoryForMerchant(MyMerchants.merchant1);
+          expect(history).toStrictEqual([]);
+        });
+    
+        test("Transacción única de compra para el mercader", () => {
+          inv.buyAssets(MyMerchants.merchant1, new Date(10,10,2025), [MyAssets.asset1, 1]);
+          const history = inv.getTransactionHistoryForMerchant(MyMerchants.merchant1);
+          expect(history.length).toBe(1);
+          expect(history[0]).toBeInstanceOf(BuyTransaction);
+          expect((history[0] as BuyTransaction).merchant).toBe(MyMerchants.merchant1);
+        });
+    
+        test("Múltiples transacciones para el mismo mercader", () => {
+          inv.buyAssets(MyMerchants.merchant1, new Date(10,10,2025), [MyAssets.asset1, 1]);
+          inv.buyAssets(MyMerchants.merchant1, new Date(10,10,2025), [MyAssets.asset2, 2]);
+          inv.buyAssets(MyMerchants.merchant1, new Date(10,10,2025), [MyAssets.asset1, 3]);
+          const history = inv.getTransactionHistoryForMerchant(MyMerchants.merchant1);
+          expect(history.length).toBe(3);
+          history.forEach((trans) => {
+            expect(trans).toBeInstanceOf(BuyTransaction);
+            expect((trans as BuyTransaction).merchant).toBe(MyMerchants.merchant1);
+          });
+        });
+    
+        test("Transacciones de distintos mercaderes se filtran correctamente", () => {
+          inv.buyAssets(MyMerchants.merchant1, new Date(10,10,2025), [MyAssets.asset1, 1]);
+          inv.buyAssets(MyMerchants.merchant2, new Date(10,10,2025), [MyAssets.asset2, 2]);
+          const history1 = inv.getTransactionHistoryForMerchant(MyMerchants.merchant1);
+          const history2 = inv.getTransactionHistoryForMerchant(MyMerchants.merchant2);
+          expect(history1.length).toBe(1);
+          expect(history2.length).toBe(1);
+          expect((history1[0] as BuyTransaction).merchant).toBe(MyMerchants.merchant1);
+          expect((history2[0] as BuyTransaction).merchant).toBe(MyMerchants.merchant2);
+        });
+    
+        test("Transacciones mixtas: solo se cuentan compras, no ventas", () => {
+          inv.buyAssets(MyMerchants.merchant1, new Date(10,10,2025), [MyAssets.asset1, 2]);
+          inv.sellAssets(MyClients.client1, new Date(10,10,2025), [MyAssets.asset1, 1]);
+          const history = inv.getTransactionHistoryForMerchant(MyMerchants.merchant1);
+          expect(history.length).toBe(1);
+          expect((history[0] as BuyTransaction).merchant).toBe(MyMerchants.merchant1);
+        });
+      });    
+
+      describe("getTransactionHistoryForClient", () => {
+        let inv: Inventary;
+        beforeEach(() => {
+          inv = new Inventary([ [MyAssets.asset1, 10], [MyAssets.asset2, 5]]);
+        });
+    
+        test("Sin transacciones para el cliente, devuelve array vacío", () => {
+          const history = inv.getTransactionHistoryForClient(MyClients.client1);
+          expect(history).toStrictEqual([]);
+        });
+    
+        test("Transacción única de venta para el cliente", () => {
+          inv.sellAssets(MyClients.client1, new Date(10,10,2025), [MyAssets.asset1, 1]);
+          const history = inv.getTransactionHistoryForClient(MyClients.client1);
+          expect(history.length).toBe(1);
+          expect(history[0]).toBeInstanceOf(SellTransaction);
+          expect((history[0] as SellTransaction).client).toBe(MyClients.client1);
+        });
+    
+        test("Múltiples transacciones para el mismo cliente", () => {
+          inv.sellAssets(MyClients.client1, new Date(10,10,2025), [MyAssets.asset1, 2]);
+          inv.sellAssets(MyClients.client1, new Date(10,10,2025), [MyAssets.asset2, 1]);
+          inv.sellAssets(MyClients.client1, new Date(10,10,2025), [MyAssets.asset1, 1]);
+          const history = inv.getTransactionHistoryForClient(MyClients.client1);
+          expect(history.length).toBe(3);
+          history.forEach((trans) => {
+            expect(trans).toBeInstanceOf(SellTransaction);
+            expect((trans as SellTransaction).client).toBe(MyClients.client1);
+          });
+        });
+    
+        test("Transacciones de distintos clientes se filtran correctamente", () => {
+          inv.sellAssets(MyClients.client1, new Date(10,10,2025), [MyAssets.asset1, 2]);
+          inv.sellAssets(MyClients.client2, new Date(10,10,2025), [MyAssets.asset2, 2]);
+          const history1 = inv.getTransactionHistoryForClient(MyClients.client1);
+          const history2 = inv.getTransactionHistoryForClient(MyClients.client2);
+          expect(history1.length).toBe(1);
+          expect(history2.length).toBe(1);
+          expect((history1[0] as SellTransaction).client).toBe(MyClients.client1);
+          expect((history2[0] as SellTransaction).client).toBe(MyClients.client2);
+        });
+    
+        test("Transacciones mixtas: solo se cuentan ventas, no compras", () => {
+          inv.buyAssets(MyMerchants.merchant1, new Date(10,10,2025), [MyAssets.asset1, 2]);
+          inv.sellAssets(MyClients.client1, new Date(10,10,2025), [MyAssets.asset1, 1]);
+          const history = inv.getTransactionHistoryForClient(MyClients.client1);
+          expect(history.length).toBe(1);
+          expect((history[0] as SellTransaction).client).toBe(MyClients.client1);
+        });
+      });
 });
