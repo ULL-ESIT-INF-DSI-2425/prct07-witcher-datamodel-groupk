@@ -94,4 +94,48 @@ describe("Pruebas de Inventary", () => {
             expect(inventary.transactions).toStrictEqual([transaction1, transaction2, transaction3, transaction4, transaction5, transaction6]);
         });
     });
+
+    describe("Pruebas de funciones de informes", () => {
+        // No funcionan (en proceso)
+        // test("getStockReport sin filtro", () => {
+        //     const report = inventary.getStockReport();
+        //     expect(report).toStrictEqual([[MyAssets.asset1, 1], [MyAssets.asset2, 1], [MyAssets.asset3, 5]]);
+        // });
+        
+        // test("getStockReport con filtro", () => {
+        //     const report = inventary.getStockReport((stock) => stock[0].description === "Espada");
+        //     expect(report).toStrictEqual([[MyAssets.asset1, 1], [MyAssets.asset2, 1]]);
+        // });
+        
+        // test("getBestSellingAssets", () => {
+        //     const bestSelling = inventary.getBestSellingAssets();
+        //     expect(bestSelling).toStrictEqual([
+        //     { asset: MyAssets.asset2, sold: 2 },
+        //     { asset: MyAssets.asset1, sold: 1 },
+        //     ]);
+        // });
+
+        test("getFinancialSummary", () => {
+            const summary = inventary.getFinancialSummary();
+            expect(summary).toStrictEqual({ totalIncome: 4920, totalExpenses: 3300 });
+          });
+
+        test("getTransactionHistoryForClient", () => {
+            const history = inventary.getTransactionHistoryForClient(MyClients.client1);
+            expect(history.length).toBe(3);
+            history.forEach((trans) => {
+              expect(trans).toBeInstanceOf(SellTransaction);
+              expect((trans as SellTransaction).client).toBe(MyClients.client1);
+            });
+          });
+
+        test("getTransactionHistoryForClient", () => {
+            const history = inventary.getTransactionHistoryForClient(MyClients.client1);
+            expect(history.length).toBe(3);
+            history.forEach((trans) => {
+                expect(trans).toBeInstanceOf(SellTransaction);
+                expect((trans as SellTransaction).client).toBe(MyClients.client1);
+            });
+        });
+    });
 });

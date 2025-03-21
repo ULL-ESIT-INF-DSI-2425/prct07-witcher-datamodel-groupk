@@ -135,4 +135,79 @@ export class Inventary {
       throw new Error("El cliente al que le quieres vender no existe.");
     }
   }
+
+  getStockReport(filter?: (stock: Stock) => boolean): Stock[] {
+    if (filter) {
+      return this._assetsList.filter(filter);
+    }
+    return this._assetsList;
+  }
+  
+  getBestSellingAssets(): { asset: Assets; sold: number }[] {
+    let salesRecords: { asset: Assets; sold: number }[] = [];
+    for (let i = 0; i < this._transactions.length; i++) {
+      const trans = this._transactions[i];
+      if (trans instanceof SellTransaction) {
+        for (let j = 0; j < trans.exchangeAssets.length; j++) {
+          const asset = trans.exchangeAssets[j][0];
+          const quantity = trans.exchangeAssets[j][1];
+          let found = false;
+          for (let k = 0; k < salesRecords.length; k++) {
+            if (salesRecords[k].asset === asset) {
+              salesRecords[k].sold += quantity;
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            salesRecords.push({ asset: asset, sold: quantity });
+          }
+        }
+      }
+    }
+    salesRecords.sort((a, b) => b.sold - a.sold);
+    return salesRecords;
+  }  
+  
+  getFinancialSummary(): { totalIncome: number; totalExpenses: number } {
+    let totalIncome = 0;
+    let totalExpenses = 0;
+    this._transactions.forEach((trans) => {
+      if (trans instanceof SellTransaction) {
+        totalIncome += trans.crowns;
+      } else if (trans instanceof BuyTransaction) {
+        totalExpenses += trans.crowns;
+      } else if (trans instanceof RefundBuyTransaction) {
+        totalExpenses -= trans.crowns;
+      }
+    });
+    return { totalIncome, totalExpenses };
+  }
+  
+  
+  getTransactionHistoryForClient(client: Clients): Transaction[] {
+    const clientTransactions: Transaction[] = [];
+    for (let i = 0; i < this._transactions.length; i++) {
+      const trans = this._transactions[i];
+      if (trans instanceof SellTransaction) {
+        if (trans.client === client) {
+          clientTransactions.push(trans);
+        }
+      }
+    }
+    return clientTransactions;
+  }
+  
+  getTransactionHistoryForMerchant(merchant: Merchant): Transaction[] {
+    const merchantTransactions: Transaction[] = [];
+    for (let i = 0; i < this._transactions.length; i++) {
+      const trans = this._transactions[i];
+      if (trans instanceof BuyTransaction) {
+        if (trans.merchant === merchant) {
+          merchantTransactions.push(trans);
+        }
+      }
+    }
+    return merchantTransactions;
+  }
 }
