@@ -207,6 +207,12 @@ export class Inventary {
     this._transactions.push(new RefundSellTransaction(date, goods, quantity, client));
   }
 
+ /**
+ * Genera un informe del inventario de bienes disponibles.
+ * @param filter - Función opcional que se aplica a cada elemento del inventario 
+ * para filtrar los bienes según ciertos criterios.
+ * @returns - Array con la lista de bienes en el inventario, filtrados si se proporciona una función de filtro.
+ */
   getStockReport(filter?: (stock: Stock) => boolean): Stock[] {
     if (filter) {
       return this._assetsList.filter(filter);
@@ -214,6 +220,10 @@ export class Inventary {
     return this._assetsList;
   }
   
+ /**
+ * Obtiene una lista de los bienes más vendidos en el inventario, ordenados por cantidad vendida en orden descendente.
+ * @returns - Array de objetos que contiene cada bien y la cantidad total vendida.
+ */
   getBestSellingAssets(): { asset: Assets; sold: number }[] {
     const salesRecords: { asset: Assets; sold: number }[] = [];
     for (let i = 0; i < this._transactions.length; i++) {
@@ -241,6 +251,10 @@ export class Inventary {
     return salesRecords;
   }  
   
+  /**
+ * Calcula un resumen financiero basado en las transacciones registradas.
+ * @returns - Un objeto (pair de dos numbers) con el total de ingresos y gastos.
+ */
   getFinancialSummary(): { totalIncome: number; totalExpenses: number } {
     let totalIncome = 0;
     let totalExpenses = 0;
@@ -256,7 +270,11 @@ export class Inventary {
     return { totalIncome, totalExpenses };
   }
   
-  
+  /**
+ * Obtiene el historial de transacciones de ventas asociadas a un cliente específico.
+ * @param client - El cliente cuyo historial de transacciones se desea obtener.
+ * @returns - Array con todas las transacciones de venta realizadas por el cliente.
+ */
   getTransactionHistoryForClient(client: Clients): Transaction[] {
     const clientTransactions: Transaction[] = [];
     for (let i = 0; i < this._transactions.length; i++) {
@@ -270,6 +288,11 @@ export class Inventary {
     return clientTransactions;
   }
   
+  /**
+ * Obtiene el historial de transacciones de compra asociadas a un mercader específico.
+ * @param merchant - El mercader cuyo historial de transacciones se desea obtener.
+ * @returns  - Un array con todas las transacciones de compra realizadas por el mercader.
+ */
   getTransactionHistoryForMerchant(merchant: Merchant): Transaction[] {
     const merchantTransactions: Transaction[] = [];
     for (let i = 0; i < this._transactions.length; i++) {
