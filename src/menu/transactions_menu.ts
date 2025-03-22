@@ -3,9 +3,11 @@ import  { menu, inventary } from "../menu/menu.js"
 import { Stock } from "../types/stock.js";
 import { db } from "../database/database.js";
 import { Merchant } from "../characters/merchant.js";
+import { Clients } from "../characters/client.js";
 import { Assets } from "../items/asset.js";
 import { AssetJSON } from "../interfaces/interfaces_json.js";
 import { MerchantJSON } from "../interfaces/interfaces_json.js";
+import { ClientsJSON } from "../interfaces/interfaces_json.js";
 import { Date } from "../utils/date.js";
 
 export async function transactionMenu() {
@@ -21,7 +23,6 @@ export async function transactionMenu() {
   switch (option) {
     case "Compra":
       db.read();
-
       const { merchant } = await inquirer.prompt([
           { type: "input", name: "merchant", message: "Ingrese el mercader al que le compra: " },
       ]);
@@ -75,21 +76,57 @@ export async function transactionMenu() {
       break;
     case "Venta":
       db.read();
-
-      const { clients } = await inquirer.prompt([
-          { type: "input", name: "clients", message: "Ingrese el cliente de la compra:" },
+      const { client } = await inquirer.prompt([
+          { type: "input", name: "client", message: "Ingrese el cliente de la compra:" },
       ]);
+      const clients: Clients[] = db.data.clients.map(client => Clients.fromJSON(client as unknown as ClientsJSON));
+      const selected_client: Clients | undefined = clients.find(client_ => client_.name.toLowerCase() === client.toLowerCase());
+      if (typeof selected_client === "undefined") {
+        console.log("El cliente no es válido.");
+        return;
+      }
       const { date_sell } = await inquirer.prompt([
-          { type: "input", name: "date_sell", message: "Ingrese la fecha de la transacción (XX-XX-XXXX): " },
+        { type: "input", name: "date_sell", message: "Ingrese la fecha de la transacción (XX-XX-XXXX): " },
       ]);
-      const { asset_sell } = await inquirer.prompt([
-          { type: "input", name: "asset_sell", message: "Ingrese el bien a vender: " },
-      ]);
-      const { number_sell } = await inquirer.prompt([
-          { type: "input", name: "number_sell", message: "Ingrese el numero que desea comprar: " },
-      ]);
-      break;
+      
+      const [day_str_sell, month_str_sell, year_str_sell] = date_sell.split("-");
+      const day_sell = Number(day_str_sell);
+      const month_sell = Number(month_str_sell);
+      const year_sell = Number(year_str_sell);
+
+      let date_Sell: Date = new Date(day_sell, month_sell, year_sell);
+
+      let continuar_sell = true;
+      const purchases_sell: Stock[] = [];
+
+      while (continuar_sell) {
+        const { asset_sell } = await inquirer.prompt([
+            { type: "input", name: "asset_sell", message: "Ingrese el bien a vender: " }
+        ]);
+        
+        const assets: Assets[] = db.data.assets.map(asset => Assets.fromJSON(asset as unknown as AssetJSON));
+        const selected_asset: Assets | undefined = assets.find(asset => asset.name.toLowerCase() === asset_sell.toLowerCase());
+        if (typeof selected_asset === "undefined") {
+          console.log("El bien no es válido.");
+          return;
+        }
+        console.log("bien");
+        const { number_sell } = await inquirer.prompt([
+            { type: "input", name: "number_sell", message: "Ingrese el número que desea comprar el cliente: "}
+        ]);
+
+        purchases_sell.push([selected_asset, number_sell]);
+
+        const { sell_more } = await inquirer.prompt([
+            { type: "confirm", name: "sell_more", message: "¿Desea comprar otro bien? (true - false) ", default: false }
+        ]);
+        continuar_sell = sell_more;
+      }
+      inventary.sellAssets(selected_client, date_Sell, ...purchases_sell);
+      await menu();
+      return;
     case "Volver atrás":
-      break;
+      await menu();
+      return;
   }
 }
