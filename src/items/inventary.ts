@@ -151,14 +151,14 @@ export class Inventary {
     assets.forEach((asset) => {
       qnt = 0;
 
-      if (!this._assetsList.some((stock) => stock[0] === asset[0] && stock[1] >= asset[1])) {
+      if (!this._assetsList.some((stock) => _.isEqual(stock[0], asset[0]) && stock[1] >= asset[1])) {
         throw new Error("No tienes del bien que quieres devolver.");
       }
 
       this._transactions.forEach((trans) => {
         if (trans instanceof BuyTransaction && trans.merchant === merchant && trans.date.isLowerOrEqualThan(date)) {
           trans.getExchangeAssets().forEach((good) => {
-            if (good[0] === asset[0]) {
+            if (good[0].id === asset[0].id) {
               qnt += good[1];
             }
           });
@@ -228,7 +228,7 @@ export class Inventary {
       this._transactions.forEach((trans) => {
         if (trans instanceof SellTransaction && trans.client === client && trans.date.isLowerOrEqualThan(date)) {
           trans.getExchangeAssets().forEach((good) => {
-            if (good[0] === asset[0]) {
+            if (good[0].id === asset[0].id) {
               qnt += good[1];
             }
           });
