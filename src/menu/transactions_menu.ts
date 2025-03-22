@@ -3,6 +3,8 @@ import  { menu, inventary } from "../menu/menu.js"
 import { Stock } from "../types/stock.js";
 import { db } from "../database/database.js";
 import { Merchant } from "../characters/merchant.js";
+import { Assets } from "../items/asset.js";
+import { AssetJSON } from "../interfaces/interfaces_json.js";
 import { MerchantJSON } from "../interfaces/interfaces_json.js";
 import { Date } from "../utils/date.js";
 
@@ -19,7 +21,7 @@ export async function transactionMenu() {
   switch (option) {
     case "Compra":
       const { merchant } = await inquirer.prompt([
-          { type: "input", name: "merchant", message: "Ingrese el merchant de la compra: " },
+          { type: "input", name: "merchant", message: "Ingrese el mercader al que le compra: " },
       ]);
       const merchants: Merchant[] = db.data.merchants.map(merchant => Merchant.fromJSON(merchant as unknown as MerchantJSON));
       const selected_merchant: Merchant | undefined = merchants.find(merchant_ => merchant_.name.toLowerCase() === merchant.toLowerCase());
@@ -47,11 +49,18 @@ export async function transactionMenu() {
             { type: "input", name: "asset_buy", message: "Ingrese el bien a comprar: " }
         ]);
 
+        const assets: Assets[] = db.data.assets.map(asset => Assets.fromJSON(asset as unknown as AssetJSON));
+        const selected_asset: Assets | undefined = assets.find(asset => asset.name.toLowerCase() === asset_buy.toLowerCase());
+        if (typeof selected_asset === "undefined") {
+          console.log("El bien no es válido.");
+          return;
+        }
+
         const { number_buy } = await inquirer.prompt([
             { type: "input", name: "number_buy", message: "Ingrese el número que desea comprar: "}
         ]);
 
-        purchases.push([asset_buy, number_buy]);
+        purchases.push([selected_asset, number_buy]);
 
         const { buy_more } = await inquirer.prompt([
             { type: "confirm", name: "buy_more", message: "¿Desea comprar otro bien? (true - false) ", default: false }
@@ -59,6 +68,8 @@ export async function transactionMenu() {
         continuar = buy_more;
       }
       inventary.buyAssets(selected_merchant, date, ...purchases);
+
+      //console.table(inventary.getStockReport());
       break;
     case "Venta":
       const { clients } = await inquirer.prompt([

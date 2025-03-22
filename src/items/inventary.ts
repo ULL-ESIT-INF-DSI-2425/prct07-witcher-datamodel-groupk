@@ -110,13 +110,13 @@ export class Inventary {
    * @param date - Fecha en el que se realiza la venta
    * @param assets - Bienes que se compran
    */
-  buyAssets(merchant: Merchant, date: Date, ...assets: Stock[]): void {
+  buyAssets(merchant: Merchant, date: Date, ...stocks: Stock[]): void {
     const merchants: Merchant[] = db.data.merchants.map(merchant => Merchant.fromJSON(merchant as unknown as MerchantJSON));
-    const assets_: Assets[] = db.data.assets.map(asset => Assets.fromJSON(asset as unknown as AssetJSON));
+    const assets: Assets[] = db.data.assets.map(asset => Assets.fromJSON(asset as unknown as AssetJSON));
 
     if (merchants.some(m => m.name === merchant.name)) {
-      assets.forEach((asset) => {
-        if (!assets_.some((asst) => asst.name === asset[0].name && asst.description === asset[0].description)) { // Problema en comparacion de assets
+      stocks.forEach((stock) => {
+        if (!assets.some((asst) =>  asst.name === stock[0].name && asst.description === stock[0].description)) { 
           throw new Error("El bien que quieres comprar no existe.");
         }
       });
@@ -124,10 +124,10 @@ export class Inventary {
       const goods: Assets[] = [];
       const quantity: number[] = [];
 
-      assets.forEach((asset) => {
-        this.addAssets(asset);
-        goods.push(asset[0]);
-        quantity.push(asset[1]);
+      stocks.forEach((stock) => {
+        this.addAssets(stock);
+        goods.push(stock[0]);
+        quantity.push(stock[1]);
       });
 
       this._transactions.push(new BuyTransaction(date, goods, quantity, merchant));

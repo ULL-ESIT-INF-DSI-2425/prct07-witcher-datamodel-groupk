@@ -2,7 +2,6 @@ import inquirer from "inquirer";
 import { Inventary } from "../items/inventary.js"
 import  { menu, inventary } from "../menu/menu.js"
 import { db } from "../database/database.js";
-import { markAsUncloneable } from "worker_threads";
 
 export async function reportMenu() {
   await db.read();
