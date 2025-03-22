@@ -73,5 +73,5 @@ export async function menu() {
   }
 }
 
-await initDB();
+initDB();
 await menu();

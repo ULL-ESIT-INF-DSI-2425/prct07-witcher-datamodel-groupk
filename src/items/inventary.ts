@@ -81,7 +81,8 @@ export class Inventary {
    */
   private addAssets(stock: Stock): void {
     if (this._assetsList.some((asset) => _.isEqual(asset[0], stock[0]))) {
-      const index: number = this._assetsList.findIndex((asset) => asset[0] === stock[0]);
+      const index: number = this._assetsList.findIndex((asset) => _.isEqual(asset[0], stock[0]));
+      console.log(this._assetsList[index])
       this._assetsList[index][1] += stock[1];
     } else {
       this._assetsList.push(stock);
@@ -116,7 +117,7 @@ export class Inventary {
     const merchants: Merchant[] = db.data.merchants.map(merchant => Merchant.fromJSON(merchant as unknown as MerchantJSON));
     const assets: Assets[] = db.data.assets.map(asset => Assets.fromJSON(asset as unknown as AssetJSON));
 
-    if (merchants.some(m => _.isEqual(m, merchant))) {
+    if (merchants.some(m => m.id === merchant.id)) {
       stocks.forEach((stock) => {
         if (!assets.some((asst) => _.isEqual(asst, stock[0]))) { 
           throw new Error("El bien que quieres comprar no existe.");
@@ -158,7 +159,7 @@ export class Inventary {
       }
 
       this._transactions.forEach((trans) => {
-        if (trans instanceof BuyTransaction && trans.merchant === merchant && trans.date.isLowerOrEqualThan(date)) {
+        if (trans instanceof BuyTransaction && trans.merchant.id === merchant.id && trans.date.isLowerOrEqualThan(date)) {
           trans.getExchangeAssets().forEach((good) => {
             if (good[0].id === asset[0].id) {
               qnt += good[1];
@@ -230,7 +231,7 @@ export class Inventary {
       qnt = 0;
 
       this._transactions.forEach((trans) => {
-        if (trans instanceof SellTransaction && trans.client === client && trans.date.isLowerOrEqualThan(date)) {
+        if (trans instanceof SellTransaction && trans.client.id === client.id && trans.date.isLowerOrEqualThan(date)) {
           trans.getExchangeAssets().forEach((good) => {
             if (good[0].id === asset[0].id) {
               qnt += good[1];

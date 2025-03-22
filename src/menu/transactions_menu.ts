@@ -9,6 +9,8 @@ import { AssetJSON } from "../interfaces/interfaces_json.js";
 import { MerchantJSON } from "../interfaces/interfaces_json.js";
 import { ClientsJSON } from "../interfaces/interfaces_json.js";
 import { Date } from "../utils/date.js";
+import { BuyTransaction } from "../transactions/buyTransaction.js";
+import { SellTransaction } from "../transactions/sellTransation.js";
 
 export async function transactionMenu() {
   const { option } = await inquirer.prompt([
@@ -16,7 +18,7 @@ export async function transactionMenu() {
       type: "list",
       name: "option",
       message: "¿Qué tipo de transacción deseas realizar?",
-      choices: ["Compra", "Venta", "Volver atrás"],
+      choices: ["Compra", "Venta", "Devolución", "Reembolso", "Volver atrás"],
     },
   ]);
 
@@ -60,7 +62,7 @@ export async function transactionMenu() {
         }
 
         const { number_buy } = await inquirer.prompt([
-            { type: "input", name: "number_buy", message: "Ingrese el número que desea comprar: "}
+            { type: "number", name: "number_buy", message: "Ingrese el número que desea comprar: "}
         ]);
 
         purchases.push([selected_asset, number_buy]);
@@ -72,8 +74,20 @@ export async function transactionMenu() {
       }
       inventary.buyAssets(selected_merchant, date, ...purchases);
 
-      //console.table(inventary.getStockReport());
-      break;
+      console.table(inventary.getStockReport().map((stock) => ({
+          name: stock[0].name,
+          quantity: stock[1]
+      })));
+
+      console.table(inventary.transactions.filter((trans) => trans instanceof BuyTransaction).map((trans => ({
+        date: trans.date.getDate(),
+        assets: trans.getExchangeAssets().map((stock) => "[" + stock[0].name + ", " + stock[1].toString() + "]").join(", "),
+        client: trans.merchant.name,
+        crowns: trans.crowns
+      }))));
+
+      await menu();
+      return;
     case "Venta":
       db.read();
       const { client } = await inquirer.prompt([
@@ -112,7 +126,7 @@ export async function transactionMenu() {
         }
         console.log("bien");
         const { number_sell } = await inquirer.prompt([
-            { type: "input", name: "number_sell", message: "Ingrese el número que desea comprar el cliente: "}
+            { type: "number", name: "number_sell", message: "Ingrese el número que desea comprar el cliente: "}
         ]);
 
         purchases_sell.push([selected_asset, number_sell]);
@@ -123,6 +137,18 @@ export async function transactionMenu() {
         continuar_sell = sell_more;
       }
       inventary.sellAssets(selected_client, date_Sell, ...purchases_sell);
+      console.table(inventary.getStockReport().map((stock) => ({
+        name: stock[0].name,
+        quantity: stock[1]
+      })));
+
+      console.table(inventary.transactions.filter((trans) => trans instanceof SellTransaction).map((trans => ({
+        date: trans.date.getDate(),
+        assets: trans.getExchangeAssets().map((stock) => "[" + stock[0].name + ", " + stock[1].toString() + "]").join(", "),
+        client: trans.client.name,
+        crowns: trans.crowns
+      }))));
+
       await menu();
       return;
     case "Volver atrás":

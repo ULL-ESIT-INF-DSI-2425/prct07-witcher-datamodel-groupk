@@ -38,6 +38,7 @@ export async function modifyMenu() {
       ]);
 
       const updated_asset_data = await inquirer.prompt([
+        { type: "input", name: "name", message: "Nuevo nombre (dejar vacío para no cambiar):" },
         { type: "input", name: "description", message: "Nueva descripción (dejar vacío para no cambiar):" },
         { type: "input", name: "materials", message: "Nuevos materiales (dejar vacío para no cambiar):" },
         { type: "number", name: "weight", message: "Nuevo peso (0 para no cambiar):" },
@@ -48,6 +49,7 @@ export async function modifyMenu() {
 
       // Arreglar 
       updateAsset(asset_name, {
+        name: updated_asset_data.name ||db.data.assets[index].name,
         description: updated_asset_data.description || db.data.assets[index].description,
         materials: updated_asset_data.materials && updated_asset_data.materials.trim() !== ""  ? updated_asset_data.materials.split(",") : db.data.assets[index].materials,
         weight: updated_asset_data.weight !== 0 ? updated_asset_data.weight : db.data.assets[index].weight,
@@ -122,13 +124,13 @@ export function updateAsset(name: string, updated_data: Partial<Assets>): void {
   const index = db.data.assets.findIndex((asset: Assets) => Assets.fromJSON(asset as unknown as AssetJSON).name === name);
   if (index !== -1) {
     const old_asset_data = db.data.assets[index];
-    db.data.assets[index] = new Assets(
-      updated_data.name ?? old_asset_data.name,
-      updated_data.description ?? old_asset_data.description,
-      updated_data.materials !== undefined ? updated_data.materials : old_asset_data.materials,
-      updated_data.weight ?? old_asset_data.weight,
-      updated_data.crowns ?? old_asset_data.crowns
-    );
+    const asset: Assets = Assets.fromJSON(db.data.assets[index] as unknown as AssetJSON);
+    asset.name = updated_data.name ?? old_asset_data.name;
+    asset.description = updated_data.description ?? old_asset_data.description;
+    asset.materials = updated_data.materials !== undefined ? updated_data.materials : old_asset_data.materials;
+    asset.weight = updated_data.weight ?? old_asset_data.weight;
+    asset.crowns = updated_data.crowns ?? old_asset_data.crowns;
+    db.data.assets[index] = asset;
     db.write();
   }
 }

@@ -222,16 +222,6 @@
       "_weight": 1,
       "_crowns": 35,
       "_id": 20
-    },
-    {
-      "_name": "a",
-      "_description": "a",
-      "_materials": [
-        "a"
-      ],
-      "_weight": 1,
-      "_crowns": 1,
-      "_id": 41
     }
   ],
   "merchants": [
