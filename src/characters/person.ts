@@ -36,6 +36,21 @@ export abstract class Person {
       set name(name: string) {
         this._name = name;
       }
+
+      /**
+       * Getter de id
+       */
+      get id() {
+        return this._id;
+      }
+
+      /**
+       * Setter del ID
+       * @param id - Nuevo ID
+       */
+      protected setId(id: number): void {
+        this._id = id;
+      }
   
       /**
        * Getter de location

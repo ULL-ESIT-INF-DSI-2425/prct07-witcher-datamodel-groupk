@@ -46,6 +46,9 @@ export class Clients extends Person {
      * @returns - Cliente en formato Clients.
      */
     static fromJSON(json: ClientsJSON): Clients {
-      return new Clients(json._name, json._location, json._race);
+      const c: Clients = new Clients(json._name, json._location, json._race);
+      c.setId(json._id);
+    
+      return c;
     }
   }

@@ -5,7 +5,7 @@ import { AssetJSON } from "../interfaces/interfaces_json.js";
  */
 export class Assets {
 
-  private readonly _id: number; // ID único del bien
+  private _id: number; // ID único del bien
   private static _idCount: number = 1; // Cuenta de IDs que se van asignando cada vez que se crea un nuevo objeto
 
   /**
@@ -44,6 +44,10 @@ export class Assets {
    */
   get id() {
     return this._id;
+  }
+
+  private setId(id: number): void {
+    this._id = id;
   }
 
   /**
@@ -122,6 +126,9 @@ export class Assets {
  * @returns Nueva instancia de Assets
  */
 static fromJSON(json: AssetJSON): Assets {
-  return new Assets(json._name, json._description, json._materials, json._weight, json._crowns);
+  const a: Assets = new Assets(json._name, json._description, json._materials, json._weight, json._crowns);
+    a.setId(json._id);
+    
+    return a;
 }
 }

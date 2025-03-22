@@ -1,6 +1,7 @@
 {
   "assets": [
     {
+      "_id": 1,
       "_name": "Mediadora",
       "_description": "Espada",
       "_materials": [
@@ -9,10 +10,10 @@
         "Amatista"
       ],
       "_weight": 9,
-      "_crowns": 700,
-      "_id": 1
+      "_crowns": 700
     },
     {
+      "_id": 2,
       "_name": "Carabella",
       "_description": "Espada",
       "_materials": [
@@ -21,10 +22,10 @@
         "Sangre de monstruo"
       ],
       "_weight": 2.13,
-      "_crowns": 800,
-      "_id": 2
+      "_crowns": 800
     },
     {
+      "_id": 3,
       "_name": "Espada de acero del brujo",
       "_description": "Espada",
       "_materials": [
@@ -32,10 +33,10 @@
         "Acero"
       ],
       "_weight": 1.74,
-      "_crowns": 200,
-      "_id": 3
+      "_crowns": 200
     },
     {
+      "_id": 4,
       "_name": "Destino",
       "_description": "Espada",
       "_materials": [
@@ -44,10 +45,10 @@
         "Amatista"
       ],
       "_weight": 9,
-      "_crowns": 600,
-      "_id": 4
+      "_crowns": 600
     },
     {
+      "_id": 5,
       "_name": "Maugrim",
       "_description": "Espada",
       "_materials": [
@@ -56,10 +57,10 @@
         "Sangre de bruja"
       ],
       "_weight": 3.16,
-      "_crowns": 500,
-      "_id": 5
+      "_crowns": 500
     },
     {
+      "_id": 6,
       "_name": "Naevde Seidhe",
       "_description": "Espada",
       "_materials": [
@@ -67,10 +68,10 @@
         "Plata"
       ],
       "_weight": 7,
-      "_crowns": 300,
-      "_id": 6
+      "_crowns": 300
     },
     {
+      "_id": 7,
       "_name": "Armadura felina",
       "_description": "Armadura",
       "_materials": [
@@ -79,10 +80,10 @@
         "Madera endurecida"
       ],
       "_weight": 3.27,
-      "_crowns": 1500,
-      "_id": 7
+      "_crowns": 1500
     },
     {
+      "_id": 8,
       "_name": "Armadura de Zireael",
       "_description": "Armadura",
       "_materials": [
@@ -90,10 +91,10 @@
         "Hierro"
       ],
       "_weight": 21,
-      "_crowns": 3200,
-      "_id": 8
+      "_crowns": 3200
     },
     {
+      "_id": 9,
       "_name": "Armadura de Tir na Lia",
       "_description": "Armadura",
       "_materials": [
@@ -101,10 +102,10 @@
         "Lana"
       ],
       "_weight": 21,
-      "_crowns": 3000,
-      "_id": 9
+      "_crowns": 3000
     },
     {
+      "_id": 10,
       "_name": "Armadura de Seltkirk",
       "_description": "Armadura",
       "_materials": [
@@ -113,10 +114,10 @@
         "Hígado de monstruo"
       ],
       "_weight": 1,
-      "_crowns": 2800,
-      "_id": 10
+      "_crowns": 2800
     },
     {
+      "_id": 11,
       "_name": "Guanteletes de Vieja Sangre",
       "_description": "Armadura",
       "_materials": [
@@ -124,10 +125,10 @@
         "Acero"
       ],
       "_weight": 2,
-      "_crowns": 1000,
-      "_id": 11
+      "_crowns": 1000
     },
     {
+      "_id": 12,
       "_name": "Sopa de cangrejo",
       "_description": "Comida",
       "_materials": [
@@ -136,10 +137,10 @@
         "Cebolla"
       ],
       "_weight": 2,
-      "_crowns": 10,
-      "_id": 12
+      "_crowns": 10
     },
     {
+      "_id": 13,
       "_name": "Empanadilla",
       "_description": "Comida",
       "_materials": [
@@ -148,10 +149,10 @@
         "Huevo"
       ],
       "_weight": 1,
-      "_crowns": 1,
-      "_id": 13
+      "_crowns": 1
     },
     {
+      "_id": 14,
       "_name": "Tartaleta de pez",
       "_description": "Comida",
       "_materials": [
@@ -159,10 +160,10 @@
         "Harina"
       ],
       "_weight": 1.5,
-      "_crowns": 18,
-      "_id": 14
+      "_crowns": 18
     },
     {
+      "_id": 15,
       "_name": "Manzana envenenada",
       "_description": "Comida",
       "_materials": [
@@ -170,181 +171,180 @@
         "Veneno"
       ],
       "_weight": 1,
-      "_crowns": 8,
-      "_id": 15
+      "_crowns": 8
     },
     {
+      "_id": 16,
       "_name": "Muslo de pollo",
       "_description": "Comida",
       "_materials": [
         "Pollo"
       ],
       "_weight": 3,
-      "_crowns": 8,
-      "_id": 16
+      "_crowns": 8
     },
     {
+      "_id": 17,
       "_name": "Pera",
       "_description": "Comida",
       "_materials": [
         "Pera"
       ],
       "_weight": 1,
-      "_crowns": 3,
-      "_id": 17
+      "_crowns": 3
     },
     {
+      "_id": 18,
       "_name": "Zumo de manzana",
       "_description": "Bebida",
       "_materials": [
         "Manzana"
       ],
       "_weight": 1,
-      "_crowns": 12,
-      "_id": 18
+      "_crowns": 12
     },
     {
+      "_id": 19,
       "_name": "Leche de vaca",
       "_description": "Bebida",
       "_materials": [
         "Leche"
       ],
       "_weight": 1,
-      "_crowns": 8,
-      "_id": 19
+      "_crowns": 8
     },
     {
+      "_id": 20,
       "_name": "Erveluce",
       "_description": "Bebida",
       "_materials": [
         "Uva"
       ],
       "_weight": 1,
-      "_crowns": 35,
-      "_id": 20
+      "_crowns": 35
     }
   ],
   "merchants": [
     {
+      "_id": 1,
       "_name": "Chet",
       "_location": "Beauclair",
-      "_id": 1,
       "_type": 2
     },
     {
+      "_id": 2,
       "_name": "Millie",
       "_location": "Vengerberg",
-      "_id": 2,
       "_type": 2
     },
     {
+      "_id": 3,
       "_name": "Mislav",
       "_location": "Ard Carraigh",
-      "_id": 3,
       "_type": 1
     },
     {
+      "_id": 4,
       "_name": "Napp",
       "_location": "Lan Exeter",
-      "_id": 4,
       "_type": 0
     },
     {
+      "_id": 5,
       "_name": "Oswin",
       "_location": "Flotsam",
-      "_id": 5,
       "_type": 2
     },
     {
+      "_id": 6,
       "_name": "Elsa",
       "_location": "Thanedd",
-      "_id": 6,
       "_type": 1
     },
     {
+      "_id": 7,
       "_name": "Eskel",
       "_location": "Visima",
-      "_id": 7,
       "_type": 1
     },
     {
+      "_id": 8,
       "_name": "Rhosyn",
       "_location": "Beauclair",
-      "_id": 8,
       "_type": 0
     },
     {
+      "_id": 9,
       "_name": "Fringilla",
       "_location": "Flotsam",
-      "_id": 9,
       "_type": 0
     },
     {
+      "_id": 10,
       "_name": "Salma",
       "_location": "Kaer Trolde",
-      "_id": 10,
       "_type": 2
     }
   ],
   "clients": [
     {
+      "_id": 1,
       "_name": "Vesemir",
       "_location": "Drakenborg",
-      "_id": 1,
       "_race": 0
     },
     {
+      "_id": 2,
       "_name": "Cahir",
       "_location": "Pont Vanis",
-      "_id": 2,
       "_race": 0
     },
     {
+      "_id": 3,
       "_name": "Calanthe",
       "_location": "Novigrad",
-      "_id": 3,
       "_race": 1
     },
     {
+      "_id": 4,
       "_name": "Jaskier",
       "_location": "Cintra",
-      "_id": 4,
       "_race": 2
     },
     {
+      "_id": 5,
       "_name": "Keira",
       "_location": "Kaer Trolde",
-      "_id": 5,
       "_race": 0
     },
     {
+      "_id": 6,
       "_name": "Agneta",
       "_location": "Novigrad",
-      "_id": 6,
       "_race": 3
     },
     {
+      "_id": 7,
       "_name": "Liesje",
       "_location": "Strept",
-      "_id": 7,
       "_race": 2
     },
     {
+      "_id": 8,
       "_name": "Lessy",
       "_location": "Drakenborg",
-      "_id": 8,
       "_race": 2
     },
     {
+      "_id": 9,
       "_name": "Bolko",
       "_location": "Thanned",
-      "_id": 9,
       "_race": 3
     },
     {
+      "_id": 10,
       "_name": "Mikah",
       "_location": "Attre",
-      "_id": 10,
       "_race": 1
     }
   ]

@@ -46,6 +46,9 @@ export class Merchant extends Person {
  * @returns Nueva instancia de Merchant
  */
   static fromJSON(json: MerchantJSON): Merchant {
-    return new Merchant(json._name, json._location, json._type);
+    const m: Merchant = new Merchant(json._name, json._location, json._type);
+    m.setId(json._id);
+    
+    return m;
   }
 }

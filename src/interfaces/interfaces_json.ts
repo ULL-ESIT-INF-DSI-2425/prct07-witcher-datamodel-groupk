@@ -6,6 +6,11 @@ import { Type, Race } from "../enums/types-and-races.js";
  */
 export interface AssetJSON {
   /**
+   * ID único del bien
+   */
+  _id: number;
+  
+  /**
    * Nombre del bien,
    */
   _name: string;
@@ -37,6 +42,11 @@ export interface AssetJSON {
  */
 export interface MerchantJSON {
   /**
+   * ID único del mercader
+   */
+  _id: number;
+  
+  /**
    * Nombre del mercader.
    */
   _name: string;
@@ -57,6 +67,11 @@ export interface MerchantJSON {
  * Se usa para guardar información de clientes en la base de datos.
  */
 export interface ClientsJSON {
+  /**
+   * ID único del cliente
+   */
+  _id: number;
+  
   /**
    * Nombre del cliente.
    */

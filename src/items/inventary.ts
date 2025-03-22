@@ -9,7 +9,7 @@ import { SellTransaction } from "../transactions/sellTransation.js";
 import { RefundBuyTransaction } from "../transactions/refundBuyTransaction.js";
 import { RefundSellTransaction } from "../transactions/refundSellTransaction.js";
 import { Assets } from "./asset.js";
-import { AssetJSON } from "../interfaces/interfaces_json.js";
+import { AssetJSON, ClientsJSON } from "../interfaces/interfaces_json.js";
 import { AssetManager } from "../managers/assets_manager.js";
 import { MerchantJSON } from "../interfaces/interfaces_json.js";
 import _ from 'lodash';
@@ -79,7 +79,7 @@ export class Inventary {
    * Añade al inventario un bien
    * @param stock - Bien y su cantidad a añadir
    */
-  addAssets(stock: Stock): void {
+  private addAssets(stock: Stock): void {
     if (this._assetsList.some((asset) => _.isEqual(asset[0], stock[0]))) {
       const index: number = this._assetsList.findIndex((asset) => asset[0] === stock[0]);
       this._assetsList[index][1] += stock[1];
@@ -114,9 +114,9 @@ export class Inventary {
     const merchants: Merchant[] = db.data.merchants.map(merchant => Merchant.fromJSON(merchant as unknown as MerchantJSON));
     const assets: Assets[] = db.data.assets.map(asset => Assets.fromJSON(asset as unknown as AssetJSON));
 
-    if (merchants.some(m => m.name === merchant.name)) {
+    if (merchants.some(m => _.isEqual(m, merchant))) {
       stocks.forEach((stock) => {
-        if (!assets.some((asst) =>  asst.name === stock[0].name && asst.description === stock[0].description)) { 
+        if (!assets.some((asst) => _.isEqual(asst, stock[0]))) { 
           throw new Error("El bien que quieres comprar no existe.");
         }
       });
@@ -185,9 +185,11 @@ export class Inventary {
    * @param date - Fecha en la que se realizó la venta
    * @param assets - Bienes vendidos
    */
-  sellAssets(client: Clients, date: Date, ...assets: Stock[]): void {
-    if (db.data.clients.includes(client)) {
-      assets.forEach((asset) => {
+  sellAssets(client: Clients, date: Date, ...stocks: Stock[]): void {
+    const clients: Clients[] = db.data.clients.map(client => Clients.fromJSON(client as unknown as ClientsJSON));
+
+    if (clients.some(c => _.isEqual(c, client))) {
+      stocks.forEach((asset) => {
         if (!this._assetsList.some((stock) => _.isEqual(stock[0], asset[0]) && asset[1] <= stock[1] )) {
           throw new Error("El bien que quieres vender no está disponible o no cuenta con el suficiente stock");
         }
@@ -196,7 +198,7 @@ export class Inventary {
       const goods: Assets[] = [];
       const quantity: number[] = [];
 
-      assets.forEach((asset) => {
+      stocks.forEach((asset) => {
         this.removeAssets(asset);
         goods.push(asset[0]);
         quantity.push(asset[1]);
