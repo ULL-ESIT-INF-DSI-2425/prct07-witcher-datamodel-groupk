@@ -111,6 +111,8 @@ export class Inventary {
    * @param assets - Bienes que se compran
    */
   buyAssets(merchant: Merchant, date: Date, ...stocks: Stock[]): void {
+    db.read();
+
     const merchants: Merchant[] = db.data.merchants.map(merchant => Merchant.fromJSON(merchant as unknown as MerchantJSON));
     const assets: Assets[] = db.data.assets.map(asset => Assets.fromJSON(asset as unknown as AssetJSON));
 
@@ -186,6 +188,8 @@ export class Inventary {
    * @param assets - Bienes vendidos
    */
   sellAssets(client: Clients, date: Date, ...stocks: Stock[]): void {
+    db.read();
+
     const clients: Clients[] = db.data.clients.map(client => Clients.fromJSON(client as unknown as ClientsJSON));
 
     if (clients.some(c => _.isEqual(c, client))) {

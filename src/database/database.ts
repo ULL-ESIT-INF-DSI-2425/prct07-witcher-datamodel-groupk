@@ -1,5 +1,5 @@
-import { Low } from "lowdb";
-import { JSONFile } from "lowdb/node"
+import { LowSync } from "lowdb";
+import { JSONFileSync } from "lowdb/node"
 import { Assets } from "../items/asset.js";
 import { Merchant } from "../characters/merchant.js";
 import { Clients } from "../characters/client.js";
@@ -26,7 +26,7 @@ const defaultData: Data = {
               MyClients.client6, MyClients.client7, MyClients.client8, MyClients.client9, MyClients.client10 ]
 };
 
-export let db = new Low<Data>(new JSONFile('src/database/db.json'), defaultData);
+export let db = new LowSync<Data>(new JSONFileSync('src/database/db.json'), defaultData);
 
 /**
  * Inicializamos la base de datos con los valores por defecto.

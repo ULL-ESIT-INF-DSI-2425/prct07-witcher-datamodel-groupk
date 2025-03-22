@@ -50,7 +50,7 @@ export class Assets {
    * Setter de id
    * @param id - Nuevo ID
    */
-  private setId(id: number): void {
+  setId(id: number): void {
     this._id = id;
   }
 
