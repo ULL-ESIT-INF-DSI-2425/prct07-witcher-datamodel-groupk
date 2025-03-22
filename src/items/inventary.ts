@@ -316,37 +316,33 @@ export class Inventary {
     return { totalIncome, totalExpenses };
   }
   
-  /**
- * Obtiene el historial de transacciones de ventas asociadas a un cliente específico.
- * @param client - El cliente cuyo historial de transacciones se desea obtener.
- * @returns - Array con todas las transacciones de venta realizadas por el cliente.
+/**
+ * Obtiene el historial de transacciones de venta asociadas a un cliente específico.
+ * @param client - El cliente cuyo historial de ventas se desea obtener.
+ * @returns - Un array de SellTransaction realizadas por el cliente.
  */
-  getTransactionHistoryForClient(client: Clients): Transaction[] {
-    const clientTransactions: Transaction[] = [];
-    for (let i = 0; i < this._transactions.length; i++) {
-      const trans = this._transactions[i];
-      if (trans instanceof SellTransaction) {
-        if (trans.client === client) {
-          clientTransactions.push(trans);
-        }
-      }
+getTransactionHistoryForClient(client: Clients): SellTransaction[] {
+  const clientTransactions: SellTransaction[] = [];
+  for (let i = 0; i < this._transactions.length; i++) {
+    const trans = this._transactions[i];
+    if (trans instanceof SellTransaction && trans.client === client) {
+      clientTransactions.push(trans);
     }
-    return clientTransactions;
   }
+  return clientTransactions;
+}
   
   /**
  * Obtiene el historial de transacciones de compra asociadas a un mercader específico.
- * @param merchant - El mercader cuyo historial de transacciones se desea obtener.
- * @returns  - Un array con todas las transacciones de compra realizadas por el mercader.
+ * @param merchant - El mercader cuyo historial de compras se desea obtener.
+ * @returns - Un array con todas las transacciones de compra realizadas al mercader.
  */
-  getTransactionHistoryForMerchant(merchant: Merchant): Transaction[] {
-    const merchantTransactions: Transaction[] = [];
+  getTransactionHistoryForMerchant(merchant: Merchant): BuyTransaction[] {
+    const merchantTransactions: BuyTransaction[] = [];
     for (let i = 0; i < this._transactions.length; i++) {
       const trans = this._transactions[i];
-      if (trans instanceof BuyTransaction) {
-        if (trans.merchant === merchant) {
-          merchantTransactions.push(trans);
-        }
+      if (trans instanceof BuyTransaction && trans.merchant === merchant) {
+        merchantTransactions.push(trans);
       }
     }
     return merchantTransactions;

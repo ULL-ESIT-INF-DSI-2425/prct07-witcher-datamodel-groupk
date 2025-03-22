@@ -12,3 +12,8 @@ export const merchant7: Merchant = new Merchant("Eskel", "Visima", Type.Alchemis
 export const merchant8: Merchant = new Merchant("Rhosyn", "Beauclair", Type.Blacksmith);
 export const merchant9: Merchant = new Merchant("Fringilla", "Flotsam", Type.Blacksmith);
 export const merchant10: Merchant = new Merchant("Salma", "Kaer Trolde", Type.General);
+
+export const merchants = [
+    merchant1, merchant2, merchant3, merchant4, merchant5,
+    merchant6, merchant7, merchant8, merchant9, merchant10
+];

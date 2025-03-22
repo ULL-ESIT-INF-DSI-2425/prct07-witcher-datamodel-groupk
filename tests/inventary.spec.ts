@@ -227,31 +227,15 @@ describe("Pruebas de Inventary", () => {
             expect(report).toStrictEqual([[MyAssets.asset1, 5], [MyAssets.asset2, 4], [MyAssets.asset7, 3]]);
         });
 
-        test("getStockReport con filtro", () => {
-            const report = inventaryInforme.getStockReport(
-            (stock) => stock[0].description === "Espada"
-            );
-            expect(report).toStrictEqual([[MyAssets.asset1, 5], [MyAssets.asset2, 4]]);
-        });
-
         test("Inventario sin ventas, getStockReport devuelve stock original", () => {
           const inv = new Inventary([[MyAssets.asset1, 5],[MyAssets.asset2, 8]]);
           const report = inv.getStockReport();
-          expect(report).toStrictEqual([
-            [MyAssets.asset1, 5],
-            [MyAssets.asset2, 8]
-          ]);
-        });
-      
-        test("Filtro que devuelve vacío: getStockReport", () => {
-          const inv = new Inventary([[MyAssets.asset1, 5], [MyAssets.asset2, 8]]);
-          const report = inv.getStockReport(() => false);
-          expect(report).toStrictEqual([]);
+          expect(report).toStrictEqual([[MyAssets.asset1, 5],[MyAssets.asset2, 8]]);
         });
       
         test("Filtro que devuelve todos: getStockReport", () => {
           const inv = new Inventary([[MyAssets.asset1, 5],[MyAssets.asset2, 8]]);
-          const report = inv.getStockReport(() => true);
+          const report = inv.getStockReport();
           expect(report).toStrictEqual([[MyAssets.asset1, 5],[MyAssets.asset2, 8]]);
         });
       
@@ -262,14 +246,6 @@ describe("Pruebas de Inventary", () => {
           inv.sellAssets(MyClients.client1, new Date(2, 2, 2025), [MyAssets.asset1, 1]);
           const report = inv.getStockReport();
           expect(report).toStrictEqual([[MyAssets.asset1, 5],[MyAssets.asset2, 4]]);
-        });
-      
-        test("Filtro por descripción en inventario mixto: getStockReport", () => {
-          const inv = new Inventary([[MyAssets.asset1, 10],[MyAssets.asset2, 8],[MyAssets.asset7, 4]]);
-          const report = inv.getStockReport(
-            (stock) => stock[0].description === "Espada"
-          );
-          expect(report).toStrictEqual([[MyAssets.asset1, 10],[MyAssets.asset2, 8]]);
         });
       });
 

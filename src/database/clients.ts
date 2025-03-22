@@ -12,3 +12,7 @@ export const client7: Clients = new Clients("Liesje", "Strept", Race.Dwarf);
 export const client8: Clients = new Clients("Lessy", "Drakenborg", Race.Dwarf);
 export const client9: Clients = new Clients("Bolko", "Thanned", Race.Wizard);
 export const client10: Clients = new Clients("Mikah", "Attre", Race.Elf);
+
+export const clients = [
+    client1, client2, client3, client4, client5, client6, client7, client8, client9, client10 
+];
