@@ -4,6 +4,7 @@ import { Assets } from "../items/asset.js";
 import { Merchant } from "../characters/merchant.js";
 import { Clients } from "../characters/client.js";
 import { menu } from "./menu.js";
+import { AssetJSON, ClientsJSON, MerchantJSON } from "../interfaces/interfaces_json.js";
 
 /**
  * Submenú removeMenu(). Permite las siguientes opciones:
@@ -27,38 +28,38 @@ export async function removeMenu() {
   switch (option) {
     case "Bien":
       db.read();
-      const assets = Array.from(new Set(db.data.assets.map((asset: Assets) => asset.name)));
+      const assets = db.data.assets.map((asset: Assets) => Assets.fromJSON(asset as unknown as AssetJSON).name);
       if (assets.length === 0) return undefined;
 
       const { name: asset_name } = await inquirer.prompt([
         { type: "rawlist", name: "name", message: "Seleccione el bien:", choices: assets }
       ]);
 
-      await removeAsset(asset_name);
+      removeAsset(asset_name);
       break;
 
     case "Mercader":
       db.read();
-      const merchants = Array.from(new Set(db.data.merchants.map((merchant: Merchant) => merchant.name)));
+      const merchants = db.data.merchants.map((merchant: Merchant) => Merchant.fromJSON(merchant as unknown as MerchantJSON).name);
       if (merchants.length === 0) return undefined;
 
       const { name: merchant_name } = await inquirer.prompt([
         { type: "rawlist", name: "name", message: "Seleccione el mercader:", choices: merchants }
       ]);
 
-      await removeMerchant(merchant_name);
+      removeMerchant(merchant_name);
       break;
 
     case "Cliente":
       db.read();
-      const clients = db.data.clients.map((client: Clients) => client.name);
+      const clients = db.data.clients.map((client: Clients) => Clients.fromJSON(client as unknown as ClientsJSON).name);
       if (clients.length === 0) return undefined;
 
       const { name: client_name } = await inquirer.prompt([
         { type: "rawlist", name: "name", message: "Seleccione el cliente:", choices: clients }
       ]);
 
-      await removeClient(client_name);
+      removeClient(client_name);
       break;
 
     case "Volver atrás":
@@ -76,7 +77,7 @@ export async function removeMenu() {
 export function removeAsset(name: string): void {
   db.read();
 
-  const index = db.data.assets.findIndex((asset: Assets) => asset.name === name);
+  const index = db.data.assets.findIndex((asset: Assets) => Assets.fromJSON(asset as unknown as AssetJSON).name === name);
   if (index !== -1) {
     db.data.assets.splice(index, 1);
     db.write();
@@ -89,7 +90,7 @@ export function removeAsset(name: string): void {
  */
 export function removeMerchant(name: string): void {
   db.read();
-  db.data.merchants = db.data.merchants.filter((merchant: Merchant) => merchant.name !== name);
+  db.data.merchants = db.data.merchants.filter((merchant: Merchant) => Merchant.fromJSON(merchant as unknown as MerchantJSON).name !== name);
   db.write();
 }
 
@@ -99,6 +100,6 @@ export function removeMerchant(name: string): void {
  */
 export function removeClient(name: string):void {
   db.read();
-  db.data.clients = db.data.clients.filter((client: Clients) => client.name !== name);
+  db.data.clients = db.data.clients.filter((client: Clients) => Clients.fromJSON(client as unknown as ClientsJSON).name !== name);
   db.write();
 }

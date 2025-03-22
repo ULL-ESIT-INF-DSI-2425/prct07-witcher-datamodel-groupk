@@ -1,6 +1,18 @@
 {
   "assets": [
     {
+      "_name": "Mediadora",
+      "_description": "Espada",
+      "_materials": [
+        "Cuero",
+        "Acero",
+        "Amatista"
+      ],
+      "_weight": 9,
+      "_crowns": 700,
+      "_id": 1
+    },
+    {
       "_name": "Carabella",
       "_description": "Espada",
       "_materials": [
@@ -212,10 +224,10 @@
       "_id": 20
     },
     {
-      "_name": "aaa",
-      "_description": "aaa",
+      "_name": "a",
+      "_description": "a",
       "_materials": [
-        "aaa"
+        "a"
       ],
       "_weight": 1,
       "_crowns": 1,

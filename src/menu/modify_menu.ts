@@ -5,6 +5,7 @@ import { Assets } from "../items/asset.js";
 import { Merchant } from "../characters/merchant.js";
 import { Clients } from "../characters/client.js";
 import { menu } from "./menu.js"
+import { AssetJSON, ClientsJSON, MerchantJSON } from "../interfaces/interfaces_json.js";
 
 /**
  * Submenú modifyMenu(). Permite las siguientes opciones:
@@ -29,7 +30,7 @@ export async function modifyMenu() {
     case "Bien":
       db.read();
 
-      const assets = db.data.assets.map((asset: Assets) => asset.name);
+      const assets = db.data.assets.map((asset: Assets) => Assets.fromJSON(asset as unknown as AssetJSON).name);
       if (assets.length === 0) return;
 
       const { name: asset_name } = await inquirer.prompt([
@@ -59,7 +60,7 @@ export async function modifyMenu() {
     case "Mercader":
       db.read();
 
-      const merchants = db.data.merchants.map((merchant: Merchant) => merchant.name);
+      const merchants = db.data.merchants.map((merchant: Merchant) => Merchant.fromJSON(merchant as unknown as MerchantJSON).name);
       if (merchants.length === 0) return;
       
       const { name: merchant_name } = await inquirer.prompt([
@@ -82,7 +83,7 @@ export async function modifyMenu() {
     case "Cliente":
       db.read();
 
-      const clients = db.data.clients.map((client: Clients) => client.name);
+      const clients = db.data.clients.map((client: Clients) => Clients.fromJSON(client as unknown as ClientsJSON).name);
       if (clients.length === 0) return;
 
       const { name: client_name } = await inquirer.prompt([
@@ -118,7 +119,7 @@ export async function modifyMenu() {
 export function updateAsset(name: string, updated_data: Partial<Assets>): void {
   db.read();
 
-  const index = db.data.assets.findIndex((asset: Assets) => asset.name === name);
+  const index = db.data.assets.findIndex((asset: Assets) => Assets.fromJSON(asset as unknown as AssetJSON).name === name);
   if (index !== -1) {
     const old_asset_data = db.data.assets[index];
     db.data.assets[index] = new Assets(
@@ -140,7 +141,7 @@ export function updateAsset(name: string, updated_data: Partial<Assets>): void {
 export function updateMerchant(name: string, updated_data: Partial<Merchant>): void {
   db.read();
   
-  const index = db.data.merchants.findIndex((merchant: Merchant) => merchant.name === name);
+  const index = db.data.merchants.findIndex((merchant: Merchant) => Merchant.fromJSON(merchant as unknown as MerchantJSON).name !== name);
   if (index !== -1) {
     const old_merchant_data = db.data.merchants[index];
     db.data.merchants[index] = new Merchant(
@@ -160,7 +161,7 @@ export function updateMerchant(name: string, updated_data: Partial<Merchant>): v
 export function updateClient(name: string, updated_data: Partial<Clients>): void {
   db.read();
 
-  const index = db.data.clients.findIndex((client: Clients) => client.name === name);
+  const index = db.data.clients.findIndex((client: Clients) => Clients.fromJSON(client as unknown as ClientsJSON).name !== name);
   if (index !== -1) {
     const old_client_data = db.data.clients[index];
     db.data.clients[index] = new Clients(
