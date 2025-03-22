@@ -1,7 +1,31 @@
 {
   "assets": [
     {
-      "name": "Espada de acero del brujo",
+      "_name": "Mediadora",
+      "_description": "Espada",
+      "_materials": [
+        "Cuero",
+        "Acero",
+        "Amatista"
+      ],
+      "_weight": 9,
+      "_crowns": 700,
+      "_id": 1
+    },
+    {
+      "_name": "Carabella",
+      "_description": "Espada",
+      "_materials": [
+        "Cuero",
+        "Acero",
+        "Sangre de monstruo"
+      ],
+      "_weight": 2.13,
+      "_crowns": 800,
+      "_id": 2
+    },
+    {
+      "_name": "Espada de acero del brujo",
       "_description": "Espada",
       "_materials": [
         "Cuero",
@@ -12,7 +36,7 @@
       "_id": 3
     },
     {
-      "name": "Destino",
+      "_name": "Destino",
       "_description": "Espada",
       "_materials": [
         "Cuero",
@@ -24,7 +48,7 @@
       "_id": 4
     },
     {
-      "name": "Maugrim",
+      "_name": "Maugrim",
       "_description": "Espada",
       "_materials": [
         "Cuero",
@@ -36,7 +60,7 @@
       "_id": 5
     },
     {
-      "name": "Naevde Seidhe",
+      "_name": "Naevde Seidhe",
       "_description": "Espada",
       "_materials": [
         "Cuero",
@@ -47,7 +71,7 @@
       "_id": 6
     },
     {
-      "name": "Armadura felina",
+      "_name": "Armadura felina",
       "_description": "Armadura",
       "_materials": [
         "Cuero",
@@ -59,7 +83,7 @@
       "_id": 7
     },
     {
-      "name": "Armadura de Zireael",
+      "_name": "Armadura de Zireael",
       "_description": "Armadura",
       "_materials": [
         "Cuero",
@@ -70,7 +94,7 @@
       "_id": 8
     },
     {
-      "name": "Armadura de Tir na Lia",
+      "_name": "Armadura de Tir na Lia",
       "_description": "Armadura",
       "_materials": [
         "Piel de lobo",
@@ -81,7 +105,7 @@
       "_id": 9
     },
     {
-      "name": "Armadura de Seltkirk",
+      "_name": "Armadura de Seltkirk",
       "_description": "Armadura",
       "_materials": [
         "Cuero",
@@ -93,7 +117,7 @@
       "_id": 10
     },
     {
-      "name": "Guanteletes de Vieja Sangre",
+      "_name": "Guanteletes de Vieja Sangre",
       "_description": "Armadura",
       "_materials": [
         "Cuero",
@@ -104,7 +128,7 @@
       "_id": 11
     },
     {
-      "name": "Sopa de cangrejo",
+      "_name": "Sopa de cangrejo",
       "_description": "Comida",
       "_materials": [
         "Cangrejo",
@@ -116,7 +140,7 @@
       "_id": 12
     },
     {
-      "name": "Empanadilla",
+      "_name": "Empanadilla",
       "_description": "Comida",
       "_materials": [
         "Oblea",
@@ -128,7 +152,7 @@
       "_id": 13
     },
     {
-      "name": "Tartaleta de pez",
+      "_name": "Tartaleta de pez",
       "_description": "Comida",
       "_materials": [
         "Salmón",
@@ -139,7 +163,7 @@
       "_id": 14
     },
     {
-      "name": "Manzana envenenada",
+      "_name": "Manzana envenenada",
       "_description": "Comida",
       "_materials": [
         "Manzana",
@@ -150,7 +174,7 @@
       "_id": 15
     },
     {
-      "name": "Muslo de pollo",
+      "_name": "Muslo de pollo",
       "_description": "Comida",
       "_materials": [
         "Pollo"
@@ -160,7 +184,7 @@
       "_id": 16
     },
     {
-      "name": "Pera",
+      "_name": "Pera",
       "_description": "Comida",
       "_materials": [
         "Pera"
@@ -170,7 +194,7 @@
       "_id": 17
     },
     {
-      "name": "Zumo de manzana",
+      "_name": "Zumo de manzana",
       "_description": "Bebida",
       "_materials": [
         "Manzana"
@@ -180,7 +204,7 @@
       "_id": 18
     },
     {
-      "name": "Leche de vaca",
+      "_name": "Leche de vaca",
       "_description": "Bebida",
       "_materials": [
         "Leche"
@@ -190,7 +214,7 @@
       "_id": 19
     },
     {
-      "name": "Erveluce",
+      "_name": "Erveluce",
       "_description": "Bebida",
       "_materials": [
         "Uva"
@@ -202,61 +226,61 @@
   ],
   "merchants": [
     {
-      "name": "Chet",
-      "_location": "LPGC",
-      "_id": 12,
-      "_type": "General"
+      "_name": "Chet",
+      "_location": "Beauclair",
+      "_id": 1,
+      "_type": 2
     },
     {
-      "name": "Millie",
+      "_name": "Millie",
       "_location": "Vengerberg",
       "_id": 2,
       "_type": 2
     },
     {
-      "name": "Mislav",
+      "_name": "Mislav",
       "_location": "Ard Carraigh",
       "_id": 3,
       "_type": 1
     },
     {
-      "name": "Napp",
+      "_name": "Napp",
       "_location": "Lan Exeter",
       "_id": 4,
       "_type": 0
     },
     {
-      "name": "Oswin",
+      "_name": "Oswin",
       "_location": "Flotsam",
       "_id": 5,
       "_type": 2
     },
     {
-      "name": "Elsa",
+      "_name": "Elsa",
       "_location": "Thanedd",
       "_id": 6,
       "_type": 1
     },
     {
-      "name": "Eskel",
+      "_name": "Eskel",
       "_location": "Visima",
       "_id": 7,
       "_type": 1
     },
     {
-      "name": "Rhosyn",
+      "_name": "Rhosyn",
       "_location": "Beauclair",
       "_id": 8,
       "_type": 0
     },
     {
-      "name": "Fringilla",
+      "_name": "Fringilla",
       "_location": "Flotsam",
       "_id": 9,
       "_type": 0
     },
     {
-      "name": "Salma",
+      "_name": "Salma",
       "_location": "Kaer Trolde",
       "_id": 10,
       "_type": 2
@@ -264,54 +288,61 @@
   ],
   "clients": [
     {
-      "name": "Vesemir",
-      "_id": 11,
-      "_race": "Human"
+      "_name": "Vesemir",
+      "_location": "Drakenborg",
+      "_id": 1,
+      "_race": 0
     },
     {
-      "name": "Calanthe",
+      "_name": "Cahir",
+      "_location": "Pont Vanis",
+      "_id": 2,
+      "_race": 0
+    },
+    {
+      "_name": "Calanthe",
       "_location": "Novigrad",
       "_id": 3,
       "_race": 1
     },
     {
-      "name": "Jaskier",
+      "_name": "Jaskier",
       "_location": "Cintra",
       "_id": 4,
       "_race": 2
     },
     {
-      "name": "Keira",
+      "_name": "Keira",
       "_location": "Kaer Trolde",
       "_id": 5,
       "_race": 0
     },
     {
-      "name": "Agneta",
+      "_name": "Agneta",
       "_location": "Novigrad",
       "_id": 6,
       "_race": 3
     },
     {
-      "name": "Liesje",
+      "_name": "Liesje",
       "_location": "Strept",
       "_id": 7,
       "_race": 2
     },
     {
-      "name": "Lessy",
+      "_name": "Lessy",
       "_location": "Drakenborg",
       "_id": 8,
       "_race": 2
     },
     {
-      "name": "Bolko",
+      "_name": "Bolko",
       "_location": "Thanned",
       "_id": 9,
       "_race": 3
     },
     {
-      "name": "Mikah",
+      "_name": "Mikah",
       "_location": "Attre",
       "_id": 10,
       "_race": 1

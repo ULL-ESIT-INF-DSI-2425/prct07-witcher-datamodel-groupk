@@ -1,12 +1,17 @@
 import inquirer from "inquirer";
-import { removeAsset, removeMerchant, removeClient } from "../database/database.js";
-import { db } from "../database/database.js";
+import { db, initDB } from "../database/database.js";
 import { Assets } from "../items/asset.js";
 import { Merchant } from "../characters/merchant.js";
 import { Clients } from "../characters/client.js";
-import { menu } from "../menu/menu.js";
+import { menu } from "./menu.js";
 
-
+/**
+ * Submenú removeMenu(). Permite las siguientes opciones:
+ * Bien: Elimina un bien existente de la base de datos.
+ * Mercader: Elimina un mercader existente de la base de datos.
+ * Cliente: Elimina un cliente existente de la base de datos.
+ * Volver atrás: Vuelve al menú principal.
+ */
 export async function removeMenu() {
   await db.read();
 
@@ -62,4 +67,37 @@ export async function removeMenu() {
   }
   
   await removeMenu();
+}
+
+/**
+ * Elimina un bien de la base de datos dado su nombre.
+ * @param name - Nombre del bien a eliminar.
+ */
+export async function removeAsset(name: string) {
+  await initDB();
+  const index = db.data.assets.findIndex((asset: Assets) => asset.name === name);
+  if (index !== -1) {
+    db.data.assets.splice(index, 1);
+    await db.write();
+  } 
+}
+
+/**
+ * Elimina un mercader de la base de datos dado su nombre.
+ * @param name - Nombre del mercader a eliminar.
+ */
+export async function removeMerchant(name: string) {
+  await initDB();
+  db.data.merchants = db.data.merchants.filter((merchant: Merchant) => merchant.name !== name);
+  await db.write();
+}
+
+/**
+ * Elimina un cliente de la base de datos dado su nombre.
+ * @param name - Nombre del cliente a eliminar.
+ */
+export async function removeClient(name: string) {
+  await initDB();
+  db.data.clients = db.data.clients.filter((client: Clients) => client.name !== name);
+  await db.write();
 }

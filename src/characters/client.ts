@@ -1,5 +1,6 @@
 import { Person } from "../characters/person.js";
 import * as Enums from "../enums/types-and-races.js";
+import { ClientsJSON } from "../interfaces/interfaces_json.js";
 
 /**
  * Clase Clients. Representa a un cliente
@@ -37,5 +38,14 @@ export class Clients extends Person {
      */
     set race(race: Enums.Race) {
       this._race = race;
+    }
+
+    /**
+     * Convierte el cliente de la base de datos a cliente normal.
+     * @param json - Cliente en formato json (base de datos).
+     * @returns - Cliente en formato Clients.
+     */
+    static fromJSON(json: ClientsJSON): Clients {
+      return new Clients(json._name, json._location, json._race);
     }
   }

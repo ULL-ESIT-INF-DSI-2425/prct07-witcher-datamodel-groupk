@@ -3,9 +3,16 @@ import { Assets } from "../items/asset.js";
 import { Merchant } from "../characters/merchant.js";
 import { Clients } from "../characters/client.js";
 import * as Enums from "../enums/types-and-races.js";
-import { addAsset, addMerchant, addClient } from "../database/database.js";
+import { db } from "../database/database.js";
 import { menu } from "./menu.js";
 
+/**
+ * Submenú addMenu(). Permite las siguientes opciones:
+ * Bien: Añade un nuevo bien a la base de datos.
+ * Mercader: Añade un nuevo mercader a la base de datos.
+ * Cliente: Añade un nuevo cliente a la base de datos.
+ * Volver atrás: Vuelve al menú principal.
+ */
 export async function addMenu() {
   const { option } = await inquirer.prompt([
     {
@@ -50,9 +57,37 @@ export async function addMenu() {
       break;
 
     case "Volver atrás":
-      menu();
+      await menu();
       return;
   }
   
   await addMenu();
+}
+
+/**
+ * Añade un bien a la base de datos.
+ * @param asset - Bien a agregar.
+ */
+export async function addAsset(asset: Assets) {
+  db.data.assets.push(asset);
+  await db.write();
+}
+
+/**
+ * Añade un mercader a la base de datos.
+ * @param merchant - Mercader a agregar.
+ */
+export async function addMerchant(merchant: Merchant) {
+  db.data.merchants.push(merchant);
+  await db.write();
+}
+
+
+/**
+ * Añade un cliente a la base de datos.
+ * @param client - Cliente a agregar
+ */
+export async function addClient(client: Clients) {
+  db.data.clients.push(client);
+  await db.write();
 }

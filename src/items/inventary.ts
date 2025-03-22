@@ -9,6 +9,9 @@ import { SellTransaction } from "../transactions/sellTransation.js";
 import { RefundBuyTransaction } from "../transactions/refundBuyTransaction.js";
 import { RefundSellTransaction } from "../transactions/refundSellTransaction.js";
 import { Assets } from "./asset.js";
+import { AssetJSON } from "../interfaces/interfaces_json.js";
+import { AssetManager } from "../managers/assets_manager.js";
+import { MerchantJSON } from "../interfaces/interfaces_json.js";
 import _ from 'lodash';
 
 /**
@@ -37,12 +40,46 @@ export class Inventary {
   get transactions() {
     return this._transactions;
   }
+
+  /**
+   * Inicializa el inventario con el stock y bienes de la base de datos.
+   * @returns - Objeto tipo inventario.
+   */
+  static async buildInventaryFromDB(): Promise<Inventary> {
+    await db.read();
+
+    let assets: Assets[] = db.data.assets.map(asset => Assets.fromJSON(asset as unknown as AssetJSON));
+  
+    let asset_manager = new AssetManager(assets);
+    assets = asset_manager.sortByName(true);
+  
+    const inventary = new Inventary([]);
+    
+    const repeat_assets: [Assets, number][] = [];
+    let counter: number = 0, i = 0;
+
+    assets.forEach((asset, index) => {
+      if (index === 0 || (asset.name === assets[index - 1].name && asset.description === assets[index - 1].description)) counter++;
+      else {
+        repeat_assets.push([assets[index - 1], counter]);
+        counter = 1;
+      }
+      i = index;
+    });
+  
+    repeat_assets.push([assets[i], counter]);
+      repeat_assets.forEach(asset => {
+      inventary.addAssets(asset);
+    });
+  
+    return inventary;
+  }
   
   /**
    * Añade al inventario un bien
    * @param stock - Bien y su cantidad a añadir
    */
-  private addAssets(stock: Stock): void {
+  addAssets(stock: Stock): void {
     if (this._assetsList.some((asset) => _.isEqual(asset[0], stock[0]))) {
       const index: number = this._assetsList.findIndex((asset) => asset[0] === stock[0]);
       this._assetsList[index][1] += stock[1];
@@ -74,9 +111,12 @@ export class Inventary {
    * @param assets - Bienes que se compran
    */
   buyAssets(merchant: Merchant, date: Date, ...assets: Stock[]): void {
-    if (db.data.merchants.includes(merchant)) {
+    const merchants: Merchant[] = db.data.merchants.map(merchant => Merchant.fromJSON(merchant as unknown as MerchantJSON));
+    const assets_: Assets[] = db.data.assets.map(asset => Assets.fromJSON(asset as unknown as AssetJSON));
+
+    if (merchants.some(m => m.name === merchant.name)) {
       assets.forEach((asset) => {
-        if (!db.data.assets.some((asst) => asst === asset[0])) {
+        if (!assets_.some((asst) => asst.name === asset[0].name && asst.description === asset[0].description)) { // Problema en comparacion de assets
           throw new Error("El bien que quieres comprar no existe.");
         }
       });
@@ -213,9 +253,9 @@ export class Inventary {
  * para filtrar los bienes según ciertos criterios.
  * @returns - Array con la lista de bienes en el inventario, filtrados si se proporciona una función de filtro.
  */
-  getStockReport(filter?: (stock: Stock) => boolean): Stock[] {
-    if (filter) {
-      return this._assetsList.filter(filter);
+ getStockReport(name?: string): Stock[] {
+    if (name) {
+        return this._assetsList.filter(stock => stock[0].name === name);
     }
     return this._assetsList;
   }

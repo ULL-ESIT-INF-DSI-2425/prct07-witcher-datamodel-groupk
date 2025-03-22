@@ -1,12 +1,18 @@
 import inquirer from "inquirer";
-import { updateAsset, updateMerchant, updateClient } from "../database/database.js";
 import * as Enums from "../enums/types-and-races.js"
-import { db } from "../database/database.js"
+import { db, initDB } from "../database/database.js"
 import { Assets } from "../items/asset.js";
 import { Merchant } from "../characters/merchant.js";
 import { Clients } from "../characters/client.js";
-import { menu } from "../menu/menu.js"
+import { menu } from "./menu.js"
 
+/**
+ * Submenú modifyMenu(). Permite las siguientes opciones:
+ * Bien: Modifica un bien existente de la base de datos.
+ * Mercader: Modifica un mercader existente de la base de datos.
+ * Cliente: Modifica un cliente existente de la base de datos.
+ * Volver atrás: Vuelve al menú principal.
+ */
 export async function modifyMenu() {
   await db.read();
 
@@ -96,4 +102,63 @@ export async function modifyMenu() {
   }
 
   await modifyMenu();
+}
+
+/**
+ * Permite modificar un bien.
+ * @param name - Nombre del bien a modificar.
+ * @param updated_data - Datos del bien a modificar. 
+ */
+export async function updateAsset(name: string, updated_data: Partial<Assets>) {
+  await initDB();
+  const index = db.data.assets.findIndex((asset: Assets) => asset.name === name);
+  if (index !== -1) {
+    const old_asset_data = db.data.assets[index];
+    db.data.assets[index] = new Assets(
+      updated_data.name ?? old_asset_data.name,
+      updated_data.description ?? old_asset_data.description,
+      updated_data.materials !== undefined ? updated_data.materials : old_asset_data.materials,
+      updated_data.weight ?? old_asset_data.weight,
+      updated_data.crowns ?? old_asset_data.crowns
+    );
+    await db.write();
+  }
+}
+
+/**
+ * Permite modificar el estado de un mercader.
+ * @param name - Nombre del mercader a modificar.
+ * @param updated_data - Datos del mercader a modificar.
+ */
+export async function updateMerchant(name: string, updated_data: Partial<Merchant>) {
+  await initDB();
+  const index = db.data.merchants.findIndex((merchant: Merchant) => merchant.name === name);
+  if (index !== -1) {
+    const old_merchant_data = db.data.merchants[index];
+    db.data.merchants[index] = new Merchant(
+      updated_data.name ?? old_merchant_data.name,
+      updated_data.location ?? old_merchant_data.location,
+      updated_data.type ?? old_merchant_data.type
+    );
+    await db.write(); 
+  } 
+}
+
+/**
+ * Permite modificar el estado de un cliente.
+ * @param name - Nombre del cliente a modificar.
+ * @param updated_data - Datos del cliente a modificar. 
+ */
+export async function updateClient(name: string, updated_data: Partial<Clients>) {
+  await initDB();
+  const index = db.data.clients.findIndex((client: Clients) => client.name === name);
+  if (index !== -1) {
+    const old_client_data = db.data.clients[index];
+    db.data.clients[index] = new Clients(
+      updated_data.name ?? old_client_data.name,
+      updated_data.location ?? old_client_data.location,
+      updated_data.race ?? old_client_data.race
+    );
+    await db.write();
+  }
 }
