@@ -14,7 +14,7 @@ import { AssetJSON } from "../interfaces/interfaces_json.js";
  * Volver atrás: Vuelve al submenú "consultMenu()".
  */
 export async function sortItemMenu() {
-  await db.read();
+  db.read();
 
   const assets: Assets[] = db.data.assets.map(asset => Assets.fromJSON(asset as unknown as AssetJSON));
   const asset_manager = new AssetManager(assets);

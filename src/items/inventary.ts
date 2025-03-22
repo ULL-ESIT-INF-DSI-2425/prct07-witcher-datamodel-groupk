@@ -45,8 +45,8 @@ export class Inventary {
    * Inicializa el inventario con el stock y bienes de la base de datos.
    * @returns - Objeto tipo inventario.
    */
-  static async buildInventaryFromDB(): Promise<Inventary> {
-    await db.read();
+  static buildInventaryFromDB(): Inventary {
+    db.read();
 
     let assets: Assets[] = db.data.assets.map(asset => Assets.fromJSON(asset as unknown as AssetJSON));
   

@@ -18,6 +18,8 @@ import { locateMenu } from "./locate_menu.js";
  * Volver atrás: Vuelve al submenu invocante "locateMenu()". 
  */
 export async function locateMerchant() {
+  db.read();
+
   const merchants: Merchant[] = db.data.merchants.map(merchant => Merchant.fromJSON(merchant as unknown as MerchantJSON));
   const merchant_manager = new MerchantManager(merchants);
 

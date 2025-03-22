@@ -1,6 +1,6 @@
 import inquirer from "inquirer";
 import * as Enums from "../enums/types-and-races.js"
-import { db, initDB } from "../database/database.js"
+import { db } from "../database/database.js"
 import { Assets } from "../items/asset.js";
 import { Merchant } from "../characters/merchant.js";
 import { Clients } from "../characters/client.js";
@@ -14,7 +14,7 @@ import { menu } from "./menu.js"
  * Volver atrás: Vuelve al menú principal.
  */
 export async function modifyMenu() {
-  await db.read();
+  db.read();
 
   const { option } = await inquirer.prompt([
     {
@@ -27,6 +27,8 @@ export async function modifyMenu() {
 
   switch (option) {
     case "Bien":
+      db.read();
+
       const assets = db.data.assets.map((asset: Assets) => asset.name);
       if (assets.length === 0) return;
 
@@ -44,17 +46,19 @@ export async function modifyMenu() {
       const index = db.data.assets.findIndex(asset => asset.name === asset_name);
 
       // Arreglar 
-      await updateAsset(asset_name, {
+      updateAsset(asset_name, {
         description: updated_asset_data.description || db.data.assets[index].description,
         materials: updated_asset_data.materials && updated_asset_data.materials.trim() !== ""  ? updated_asset_data.materials.split(",") : db.data.assets[index].materials,
         weight: updated_asset_data.weight !== 0 ? updated_asset_data.weight : db.data.assets[index].weight,
         crowns: updated_asset_data.crowns !== 0 ? updated_asset_data.crowns : db.data.assets[index].crowns,
       });
       
-      await db.write();
+      db.write();
       break;
 
     case "Mercader":
+      db.read();
+
       const merchants = db.data.merchants.map((merchant: Merchant) => merchant.name);
       if (merchants.length === 0) return;
       
@@ -67,15 +71,17 @@ export async function modifyMenu() {
         { type: "list", name: "type", message: "Nuevo tipo de mercader:", choices: Object.values(Enums.Type).filter(value => isNaN(Number(value))).map(String) },
       ]);
 
-      await updateMerchant(merchant_name, {
+      updateMerchant(merchant_name, {
         location: updated_merchant_data.location || undefined,
         type: updated_merchant_data.type || undefined,
       });
 
-      await db.write();
+      db.write();
       break;
 
     case "Cliente":
+      db.read();
+
       const clients = db.data.clients.map((client: Clients) => client.name);
       if (clients.length === 0) return;
 
@@ -88,12 +94,12 @@ export async function modifyMenu() {
         { type: "list", name: "race", message: "Nueva raza:", choices: Object.values(Enums.Race).filter(value => isNaN(Number(value))).map(String) },
       ]);
 
-      await updateClient(client_name, {
+      updateClient(client_name, {
         location: updated_client_data.location || undefined,
         race: updated_client_data.race || undefined,
       });
 
-      await db.write();
+      db.write();
       break;
 
     case "Volver atrás":
@@ -109,8 +115,9 @@ export async function modifyMenu() {
  * @param name - Nombre del bien a modificar.
  * @param updated_data - Datos del bien a modificar. 
  */
-export async function updateAsset(name: string, updated_data: Partial<Assets>) {
-  await initDB();
+export function updateAsset(name: string, updated_data: Partial<Assets>): void {
+  db.read();
+
   const index = db.data.assets.findIndex((asset: Assets) => asset.name === name);
   if (index !== -1) {
     const old_asset_data = db.data.assets[index];
@@ -121,7 +128,7 @@ export async function updateAsset(name: string, updated_data: Partial<Assets>) {
       updated_data.weight ?? old_asset_data.weight,
       updated_data.crowns ?? old_asset_data.crowns
     );
-    await db.write();
+    db.write();
   }
 }
 
@@ -130,8 +137,9 @@ export async function updateAsset(name: string, updated_data: Partial<Assets>) {
  * @param name - Nombre del mercader a modificar.
  * @param updated_data - Datos del mercader a modificar.
  */
-export async function updateMerchant(name: string, updated_data: Partial<Merchant>) {
-  await initDB();
+export function updateMerchant(name: string, updated_data: Partial<Merchant>): void {
+  db.read();
+  
   const index = db.data.merchants.findIndex((merchant: Merchant) => merchant.name === name);
   if (index !== -1) {
     const old_merchant_data = db.data.merchants[index];
@@ -140,7 +148,7 @@ export async function updateMerchant(name: string, updated_data: Partial<Merchan
       updated_data.location ?? old_merchant_data.location,
       updated_data.type ?? old_merchant_data.type
     );
-    await db.write(); 
+    db.write(); 
   } 
 }
 
@@ -149,8 +157,9 @@ export async function updateMerchant(name: string, updated_data: Partial<Merchan
  * @param name - Nombre del cliente a modificar.
  * @param updated_data - Datos del cliente a modificar. 
  */
-export async function updateClient(name: string, updated_data: Partial<Clients>) {
-  await initDB();
+export function updateClient(name: string, updated_data: Partial<Clients>): void {
+  db.read();
+
   const index = db.data.clients.findIndex((client: Clients) => client.name === name);
   if (index !== -1) {
     const old_client_data = db.data.clients[index];
@@ -159,6 +168,6 @@ export async function updateClient(name: string, updated_data: Partial<Clients>)
       updated_data.location ?? old_client_data.location,
       updated_data.race ?? old_client_data.race
     );
-    await db.write();
+    db.write();
   }
 }

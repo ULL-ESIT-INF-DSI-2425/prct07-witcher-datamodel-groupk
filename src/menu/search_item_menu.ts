@@ -13,7 +13,7 @@ import { consultMenu } from "./consult_menu.js";
  * Volver atrás: Vuelve al submenú "consultMenu()".
  */
 export async function searchItemMenu() {
-  await db.read();
+  db.read();
 
   const assets: Assets[] = db.data.assets.map(asset => Assets.fromJSON(asset as unknown as AssetJSON));
   const asset_manager = new AssetManager(assets);

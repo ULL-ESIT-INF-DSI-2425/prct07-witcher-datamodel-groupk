@@ -11,7 +11,7 @@ import { sortItemMenu } from "./sort_item_menu.js";
  * Volver atrás: Regresa al menú principal.
  */
 export async function consultMenu() {
-  await db.read();
+  db.read();
 
   const { option } = await inquirer.prompt([
     {

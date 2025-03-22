@@ -11,7 +11,7 @@ import { locateClient } from "./locate_client_menu.js";
  * Volver atrás: Vuelve al menú principal.
  */
 export async function locateMenu() {
-  await db.read(); 
+  db.read(); 
 
   const { category } = await inquirer.prompt([
     {

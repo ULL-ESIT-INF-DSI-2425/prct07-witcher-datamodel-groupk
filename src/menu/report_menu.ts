@@ -1,14 +1,11 @@
 import inquirer from "inquirer";
-import { Inventary } from "../items/inventary.js"
 import  { menu, inventary } from "../menu/menu.js"
 import { db } from "../database/database.js";
 import * as MyClients from "../database/clients.js";
-import { Date } from "../utils/date.js";
-import * as MyAssets from "../database/assets.js";
 import * as MyMerchants from "../database/merchants.js";
 
 export async function reportMenu() {
-  await db.read();
+  db.read();
 
   const { option } = await inquirer.prompt([
     {

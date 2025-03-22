@@ -18,6 +18,8 @@ import { locateMenu } from "./locate_menu.js";
  * Volver atrás: Vuelve al submenu invocante "locateMenu()". 
  */
 export async function locateClient() {
+  db.read();
+
   const clients: Clients[] = db.data.clients.map(client => Clients.fromJSON(client as unknown as ClientsJSON));
   const client_manager = new ClientsManager(clients);
 

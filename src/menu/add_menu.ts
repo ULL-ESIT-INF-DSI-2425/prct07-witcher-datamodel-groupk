@@ -33,7 +33,7 @@ export async function addMenu() {
         {type: "number", name: "crowns", message: "Valor en coronas: "},
       ]);
 
-      await addAsset(new Assets(asset.name, asset.description, asset.materials.split(","), asset.weight, asset.crowns));
+      addAsset(new Assets(asset.name, asset.description, asset.materials.split(","), asset.weight, asset.crowns));
       break;
 
     case "Mercader":
@@ -43,7 +43,7 @@ export async function addMenu() {
         {type: "list", name: "type", message: "Tipo: ", choices: Object.values(Enums.Type).filter(value => isNaN(Number(value))).map(String)},
       ]);
       
-      await addMerchant(new Merchant(merchant.name, merchant.location, merchant.type));
+      addMerchant(new Merchant(merchant.name, merchant.location, merchant.type));
       break;
 
     case "Cliente":
@@ -53,7 +53,7 @@ export async function addMenu() {
         {type: "list", name: "race", message: "Raza: ", choices: Object.values(Enums.Race).filter(value => isNaN(Number(value))).map(String)},
       ]);
       
-      await addClient(new Clients(client.name, client.location, client.race));
+      addClient(new Clients(client.name, client.location, client.race));
       break;
 
     case "Volver atrás":
@@ -68,18 +68,18 @@ export async function addMenu() {
  * Añade un bien a la base de datos.
  * @param asset - Bien a agregar.
  */
-export async function addAsset(asset: Assets) {
+export function addAsset(asset: Assets): void {
   db.data.assets.push(asset);
-  await db.write();
+  db.write();
 }
 
 /**
  * Añade un mercader a la base de datos.
  * @param merchant - Mercader a agregar.
  */
-export async function addMerchant(merchant: Merchant) {
+export function addMerchant(merchant: Merchant): void {
   db.data.merchants.push(merchant);
-  await db.write();
+  db.write();
 }
 
 
@@ -87,7 +87,7 @@ export async function addMerchant(merchant: Merchant) {
  * Añade un cliente a la base de datos.
  * @param client - Cliente a agregar
  */
-export async function addClient(client: Clients) {
+export function addClient(client: Clients): void {
   db.data.clients.push(client);
-  await db.write();
+  db.write();
 }

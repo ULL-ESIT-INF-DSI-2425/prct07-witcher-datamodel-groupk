@@ -26,12 +26,12 @@ const defaultData: Data = {
               MyClients.client6, MyClients.client7, MyClients.client8, MyClients.client9, MyClients.client10 ]
 };
 
-export let db = new LowSync<Data>(new JSONFileSync('src/database/db.json'), defaultData);
+export const db = new LowSync<Data>(new JSONFileSync('src/database/db.json'), defaultData);
 
 /**
  * Inicializamos la base de datos con los valores por defecto.
  */
-export async function initDB() {
+export function initDB(): void {
   db.data = JSON.parse(JSON.stringify(defaultData));
-  await db.write();
+  db.write();
 }

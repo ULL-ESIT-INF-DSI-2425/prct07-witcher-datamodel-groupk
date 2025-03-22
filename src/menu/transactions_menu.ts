@@ -20,6 +20,8 @@ export async function transactionMenu() {
 
   switch (option) {
     case "Compra":
+      db.read();
+
       const { merchant } = await inquirer.prompt([
           { type: "input", name: "merchant", message: "Ingrese el mercader al que le compra: " },
       ]);
@@ -72,6 +74,8 @@ export async function transactionMenu() {
       //console.table(inventary.getStockReport());
       break;
     case "Venta":
+      db.read();
+
       const { clients } = await inquirer.prompt([
           { type: "input", name: "clients", message: "Ingrese el cliente de la compra:" },
       ]);
