@@ -311,6 +311,8 @@ export class Inventary {
         totalExpenses += trans.crowns;
       } else if (trans instanceof RefundBuyTransaction) {
         totalExpenses -= trans.crowns;
+      } else if (trans instanceof RefundSellTransaction) {
+        totalIncome -= trans.crowns;
       }
     });
     return { totalIncome, totalExpenses };
@@ -325,7 +327,7 @@ getTransactionHistoryForClient(client: Clients): SellTransaction[] {
   const clientTransactions: SellTransaction[] = [];
   for (let i = 0; i < this._transactions.length; i++) {
     const trans = this._transactions[i];
-    if (trans instanceof SellTransaction && trans.client.id === client.id) {
+    if ((trans instanceof SellTransaction || trans instanceof RefundSellTransaction) && trans.client.id === client.id) {
       clientTransactions.push(trans);
     }
   }
@@ -341,7 +343,7 @@ getTransactionHistoryForClient(client: Clients): SellTransaction[] {
     const merchantTransactions: BuyTransaction[] = [];
     for (let i = 0; i < this._transactions.length; i++) {
       const trans = this._transactions[i];
-      if (trans instanceof BuyTransaction && trans.merchant.id === merchant.id) {
+      if ((trans instanceof BuyTransaction || trans instanceof RefundBuyTransaction) && trans.merchant.id === merchant.id) {
         merchantTransactions.push(trans);
       }
     }
