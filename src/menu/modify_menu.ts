@@ -80,11 +80,13 @@ export async function modifyMenu() {
       }
 
       const updated_merchant_data = await inquirer.prompt([
+        { type: "input", name: "name", message: "Nuevo nombre (dejar vacío para no cambiar):" },
         { type: "input", name: "location", message: "Nueva ubicación (dejar vacío para no cambiar):" },
         { type: "list", name: "type", message: "Nuevo tipo de mercader:", choices: Object.values(Enums.Type).filter(value => isNaN(Number(value))).map(String) },
       ]);
 
       updateMerchant(merchant_name, {
+        name: updated_merchant_data.name || merchants[i].name,
         location: updated_merchant_data.location || merchants[i].location,
         type: updated_merchant_data.type || merchants[i].type,
       });
@@ -109,6 +111,7 @@ export async function modifyMenu() {
       }
 
       const updated_client_data = await inquirer.prompt([
+        { type: "input", name: "name", message: "Nuevo nombre (dejar vacío para no cambiar):" },
         { type: "input", name: "location", message: "Nueva ubicación (dejar vacío para no cambiar):" },
         { type: "list", name: "race", message: "Nueva raza:", choices: Object.values(Enums.Race).filter(value => isNaN(Number(value))).map(String) },
       ]);
@@ -170,11 +173,11 @@ export function updateMerchant(name: string, updated_data: Partial<Merchant>): v
 
   if (index !== -1) {
     const old_merchant_data = merchants[index];
-    db.data.merchants[index] = new Merchant(
-      updated_data.name ?? old_merchant_data.name,
-      updated_data.location ?? old_merchant_data.location,
-      parsed_type ?? old_merchant_data.type
-    );
+    const merchant: Merchant = Merchant.fromJSON(old_merchant_data as unknown as MerchantJSON);
+    merchant.name = updated_data.name ?? old_merchant_data.name;
+    merchant.location = updated_data.location ?? old_merchant_data.location;
+    merchant.type = parsed_type ?? old_merchant_data.type;
+    db.data.merchants[index] = merchant;
     db.write(); 
   } 
 }
@@ -198,11 +201,11 @@ export function updateClient(name: string, updated_data: Partial<Clients>): void
 
   if (index !== -1) {
     const old_client_data = clients[index];
-    db.data.clients[index] = new Clients(
-      updated_data.name ?? old_client_data.name,
-      updated_data.location ?? old_client_data.location,
-      parsed_race ?? old_client_data.race
-    );
+    const client: Clients = Clients.fromJSON(old_client_data as unknown as ClientsJSON);
+    client.name = updated_data.name ?? old_client_data.name;
+    client.location = updated_data.location ?? old_client_data.location;
+    client.race = parsed_race ?? old_client_data.race;
+    db.data.clients[index] = client;
     db.write();
   }
 }

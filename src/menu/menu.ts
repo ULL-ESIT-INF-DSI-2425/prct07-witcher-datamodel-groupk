@@ -5,7 +5,7 @@ import { modifyMenu } from "./modify_menu.js";
 import { consultMenu } from "./consult_menu.js";
 import { locateMenu } from "./locate_menu.js";
 import { reportMenu } from "./report_menu.js"
-import { initDB } from "../database/database.js";
+import { db, initDB } from "../database/database.js";
 import { Inventary } from "../items/inventary.js";
 import { transactionMenu } from "./transactions_menu.js";
 
@@ -73,5 +73,9 @@ export async function menu() {
   }
 }
 
-initDB();
+if (db.data === null) {
+  initDB();
+}
+
+db.read();
 await menu();

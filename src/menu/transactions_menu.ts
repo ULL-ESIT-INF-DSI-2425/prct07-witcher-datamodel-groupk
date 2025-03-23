@@ -12,6 +12,7 @@ import { Date } from "../utils/date.js";
 import { BuyTransaction } from "../transactions/buyTransaction.js";
 import { SellTransaction } from "../transactions/sellTransation.js";
 import { RefundBuyTransaction } from "../transactions/refundBuyTransaction.js"
+import { RefundSellTransaction } from "../transactions/refundSellTransaction.js";
 
 /**
  * Submenú transactionMenu(). Permite realizar una operación o transacción con un bien:
@@ -72,7 +73,7 @@ export async function transactionMenu() {
         quantity: stock[1]
       })));
 
-      console.table(inventary.transactions.filter((trans) => trans instanceof SellTransaction).map((trans => ({
+      console.table(inventary.transactions.filter((trans) => trans instanceof RefundSellTransaction).map((trans => ({
         date: trans.date.getDate(),
         assets: trans.getExchangeAssets().map((stock) => "[" + stock[0].name + ", " + stock[1].toString() + "]").join(", "),
         client: trans.client.name,
@@ -159,7 +160,7 @@ async function buyAndRefund(merchant_name: string): Promise<{ selected_merchant:
   const month = Number(month_str);
   const year = Number(year_str);
 
-  let date: Date = new Date(day, month, year);
+  const date: Date = new Date(day, month, year);
   
   let continuar = true;
   const purchases: Stock[] = [];
@@ -193,7 +194,7 @@ async function buyAndRefund(merchant_name: string): Promise<{ selected_merchant:
 /**
  * Solicita al usuario los datos a realizar una transación de venta y devolución
  * @param client_name - El nombre del cliente al que se le realizá la venta
- * @return - Una promesa (puesto que es una función asincrona) que contiene:
+ * @returns Una promesa (puesto que es una función asincrona) que contiene:
  *           - selected_client: La instancia del cliente seleccionado.
  *           - date: La fecha de la transacción.
  *           - purchases: Un array de Stock, donde cada elemento es un par [bien, cantidad].
@@ -215,7 +216,7 @@ async function sellAndRefund(client_name: string): Promise<{ selected_client: Cl
     const month_sell = Number(month_str_sell);
     const year_sell = Number(year_str_sell);
 
-    let date_Sell: Date = new Date(day_sell, month_sell, year_sell);
+    const date_Sell: Date = new Date(day_sell, month_sell, year_sell);
 
     let continuar_sell = true;
     const purchases_sell: Stock[] = [];
