@@ -48,9 +48,17 @@ describe("Pruebas de Assets", () => {
     });
 
     describe("Pruebas de setters", () => {
+        test("Setter de name fallido", () => {
+            expect(() => MyAssets.asset1.name = "").toThrowError("El nombre no puede estar vacío.");
+        });
+        
         test("Setter de name", () => {
             MyAssets.asset1.name = "Espada";
             expect(MyAssets.asset1.name).toStrictEqual("Espada");
+        });
+
+        test("Setter de description fallido", () => {
+            expect(() => MyAssets.asset1.description = "").toThrowError("El descripción no puede estar vacía.");
         });
 
         test("Setter de description", () => {
@@ -58,14 +66,26 @@ describe("Pruebas de Assets", () => {
             expect(MyAssets.asset1.description).toStrictEqual("Descripción");
         });
 
+        test("Setter de materials fallido", () => {
+            expect(() => MyAssets.asset1.materials = []).toThrowError("La lista de materiales no puede estar vacía.");
+        });
+
         test("Setter de materials", () => {
             MyAssets.asset1.materials = ["Acero"];
             expect(MyAssets.asset1.materials).toStrictEqual(["Acero"]);
         });
 
+        test("Setter de weight fallido", () => {
+            expect(() => MyAssets.asset1.weight = -10).toThrowError("El peso del bien ha de ser mayor que 0.");
+        });
+
         test("Setter de weight", () => {
             MyAssets.asset1.weight = 10;
             expect(MyAssets.asset1.weight).toStrictEqual(10);
+        });
+
+        test("Setter de crowns fallido", () => {
+            expect(() => MyAssets.asset1.crowns = -10).toThrowError("El número de coronas no puede ser negativos.");
         });
 
         test("Setter de crowns", () => {

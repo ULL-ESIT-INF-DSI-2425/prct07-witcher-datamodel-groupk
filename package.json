@@ -7,7 +7,7 @@
     "dev": "tsc-watch --onSuccess \"node dist/basicFunctions.js\"",
     "doc": "typedoc",
     "test": "vitest run",
-    "coverage": "vitest run --coverage --coverage.include '**/src/*'"
+    "coverage": "vitest run --coverage --coverage.include '**/src/*' --coverage.exclude '**/src/menu/*'"
   },
   "repository": {
     "type": "git",

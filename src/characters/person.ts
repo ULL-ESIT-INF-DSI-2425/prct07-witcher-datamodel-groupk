@@ -27,6 +27,7 @@ export abstract class Person {
        * Getter de name
        */
       get name() {
+
         return this._name;
       }
 
@@ -34,6 +35,10 @@ export abstract class Person {
        * Setter de name
        */
       set name(name: string) {
+        if (name === "") {
+          throw new Error("El nombre no puede estar vacío.");
+        }
+
         this._name = name;
       }
 
@@ -63,6 +68,10 @@ export abstract class Person {
        * Setter de location
        */
       set location(local: string) {
+        if (local === "") {
+          throw new Error("El nombre de la localización no puede estar vacío.");
+         }
+
         this._location = local;
       }
   }

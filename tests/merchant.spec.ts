@@ -29,9 +29,18 @@ describe("Pruebas de Merchant", () => {
         });
     
         describe("Pruebas de los setter", () => {
+            test("Setter de name fallido", () => {
+                expect(() => MyMerchants.merchant1.name = "").toThrowError("El nombre no puede estar vacío.");
+            });
+            
             test("Setter de name", () => {
                 MyMerchants.merchant1.name = "Nombre";
                 expect(MyMerchants.merchant1.name).toStrictEqual("Nombre");
+            });
+
+            test("Setter de location fallido", () => {
+                ;
+                expect(() => MyMerchants.merchant1.location = "").toThrowError("El nombre de la localización no puede estar vacío.");
             });
     
             test("Setter de location", () => {

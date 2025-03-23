@@ -50,7 +50,7 @@ export class Assets {
    * Setter de id
    * @param id - Nuevo ID
    */
-  setId(id: number): void {
+  private setId(id: number): void {
     this._id = id;
   }
 
@@ -65,6 +65,10 @@ export class Assets {
    * Setter de name
    */
   set name(name: string) {
+    if (name === "") {
+      throw new Error("El nombre no puede estar vacío.");
+    }
+
     this._name = name;
   }
 
@@ -79,6 +83,10 @@ export class Assets {
    * Setter de description
    */
   set description(desc: string) {
+    if (desc === "") {
+      throw new Error("El descripción no puede estar vacía.");
+    }
+
     this._description = desc;
   }
 
@@ -93,6 +101,10 @@ export class Assets {
    * Setter de materials
    */
   set materials(mats: string[]) {
+    if (mats.length === 0) {
+      throw new Error("La lista de materiales no puede estar vacía.");
+    }
+
     this._materials = mats;
   }
 
@@ -107,6 +119,10 @@ export class Assets {
    * Setter de weight
    */
   set weight(weight: number) {
+    if (weight <= 0) {
+      throw new Error("El peso del bien ha de ser mayor que 0.");
+    }
+
     this._weight = weight;
   }
 
@@ -121,6 +137,10 @@ export class Assets {
    * Setter de crowns
    */
   set crowns(crowns: number) {
+    if (crowns < 0) {
+      throw new Error("El número de coronas no puede ser negativos.");
+    }
+
     this._crowns = crowns;
   }
 

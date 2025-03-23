@@ -29,9 +29,17 @@ describe("Pruebas de Clients", () => {
     });
 
     describe("Pruebas de los setter", () => {
+        test("Setter de name fallido", () => {
+            expect(() => MyClients.client1.name = "").toThrowError("El nombre no puede estar vacío.");
+        });
+
         test("Setter de name", () => {
             MyClients.client1.name = "Nombre";
             expect(MyClients.client1.name).toStrictEqual("Nombre");
+        });
+
+        test("Setter de location fallido", () => {
+            expect(() => MyClients.client1.location = "").toThrowError("El nombre de la localización no puede estar vacío.");
         });
 
         test("Setter de location", () => {
