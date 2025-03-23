@@ -26,4 +26,12 @@ export class SellTransaction extends Transaction {
     get client() {
         return this._client;
     }
+
+    /**
+     * Función que determina que no es un reembolso
+     * @return - Booleano que indica si es true (es un reembolso) o false (venta)
+     */
+    get isRefund(): boolean {
+        return false;
+    }
 }

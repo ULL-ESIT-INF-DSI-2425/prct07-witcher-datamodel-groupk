@@ -326,7 +326,7 @@ getTransactionHistoryForClient(client: Clients): SellTransaction[] {
   const clientTransactions: SellTransaction[] = [];
   for (let i = 0; i < this._transactions.length; i++) {
     const trans = this._transactions[i];
-    if (trans instanceof SellTransaction && trans.client === client) {
+    if (trans instanceof SellTransaction && trans.client.id === client.id) {
       clientTransactions.push(trans);
     }
   }
@@ -342,7 +342,7 @@ getTransactionHistoryForClient(client: Clients): SellTransaction[] {
     const merchantTransactions: BuyTransaction[] = [];
     for (let i = 0; i < this._transactions.length; i++) {
       const trans = this._transactions[i];
-      if (trans instanceof BuyTransaction && trans.merchant === merchant) {
+      if (trans instanceof BuyTransaction && trans.merchant.id === merchant.id) {
         merchantTransactions.push(trans);
       }
     }

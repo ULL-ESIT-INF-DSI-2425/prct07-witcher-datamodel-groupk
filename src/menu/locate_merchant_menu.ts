@@ -79,7 +79,7 @@ export async function locateMerchant() {
         Tipo: typeof merchant.type === "number" ? Type[merchant.type] : merchant.type
       }))); 
       
-      else console.log("No se encontraron mercaderes de dicho tipo.");
+      else console.log("No se encontraron mercaderes en dicha ubicación.");
       break;
 
     case "Ver todos":

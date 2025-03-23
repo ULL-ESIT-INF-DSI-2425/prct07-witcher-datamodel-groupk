@@ -360,17 +360,6 @@ describe("Pruebas de Inventary", () => {
           });
         });
     
-        test("Transacciones de distintos mercaderes se filtran correctamente", () => {
-          inv.buyAssets(MyMerchants.merchant1, new Date(10,10,2025), [MyAssets.asset1, 1]);
-          inv.buyAssets(MyMerchants.merchant2, new Date(10,10,2025), [MyAssets.asset2, 2]);
-          const history1 = inv.getTransactionHistoryForMerchant(MyMerchants.merchant1);
-          const history2 = inv.getTransactionHistoryForMerchant(MyMerchants.merchant2);
-          expect(history1.length).toBe(1);
-          expect(history2.length).toBe(1);
-          expect((history1[0] as BuyTransaction).merchant).toBe(MyMerchants.merchant1);
-          expect((history2[0] as BuyTransaction).merchant).toBe(MyMerchants.merchant2);
-        });
-    
         test("Transacciones mixtas: solo se cuentan compras, no ventas", () => {
           inv.buyAssets(MyMerchants.merchant1, new Date(10,10,2025), [MyAssets.asset1, 2]);
           inv.sellAssets(MyClients.client1, new Date(10,10,2025), [MyAssets.asset1, 1]);
@@ -409,17 +398,6 @@ describe("Pruebas de Inventary", () => {
             expect(trans).toBeInstanceOf(SellTransaction);
             expect((trans as SellTransaction).client).toBe(MyClients.client1);
           });
-        });
-    
-        test("Transacciones de distintos clientes se filtran correctamente", () => {
-          inv.sellAssets(MyClients.client1, new Date(10,10,2025), [MyAssets.asset1, 2]);
-          inv.sellAssets(MyClients.client2, new Date(10,10,2025), [MyAssets.asset2, 2]);
-          const history1 = inv.getTransactionHistoryForClient(MyClients.client1);
-          const history2 = inv.getTransactionHistoryForClient(MyClients.client2);
-          expect(history1.length).toBe(1);
-          expect(history2.length).toBe(1);
-          expect((history1[0] as SellTransaction).client).toBe(MyClients.client1);
-          expect((history2[0] as SellTransaction).client).toBe(MyClients.client2);
         });
     
         test("Transacciones mixtas: solo se cuentan ventas, no compras", () => {

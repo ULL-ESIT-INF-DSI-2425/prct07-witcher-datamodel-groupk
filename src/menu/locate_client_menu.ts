@@ -48,12 +48,12 @@ export async function locateClient() {
         Raza: typeof client.race === "number" ? Race[client.race] : client.race
       })));
       
-      else console.log("No se encontraron mercaderes con ese nombre.");
+      else console.log("No se encontraron clientes con ese nombre.");
       break;
 
-    case "Tipo":
+    case "Raza":
       const { selected_race } = await inquirer.prompt([
-          { type: "list", name: "selected_race", message: "Seleccione el tipo de mercader:", choices: Object.values(Race).filter((race): race is keyof typeof Race => isNaN(Number(race))) },
+          { type: "list", name: "selected_race", message: "Seleccione la raza del cliente:", choices: Object.values(Race).filter((race): race is keyof typeof Race => isNaN(Number(race))) },
       ]);
       const enum_race = Race[selected_race as keyof typeof Race];
       found_clients = client_manager.searchByRace(enum_race);
@@ -64,7 +64,7 @@ export async function locateClient() {
         Raza: typeof client.race === "number" ? Race[client.race] : client.race
       })));
 
-      else console.log("No se encontraron mercaderes de dicho tipo.");
+      else console.log("No se encontraron clientes de dicha raza.");
       break;
 
     case "Ubicación":
@@ -79,7 +79,7 @@ export async function locateClient() {
         Raza: typeof client.race === "number" ? Race[client.race] : client.race
       })));
 
-      else console.log("No se encontraron mercaderes de dicho tipo.");
+      else console.log("No se encontraron clientes en dicha ubicación.");
       break;
 
     case "Ver todos":

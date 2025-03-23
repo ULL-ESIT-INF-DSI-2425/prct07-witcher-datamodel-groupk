@@ -29,7 +29,7 @@ export async function menu() {
       type: "rawlist",
       name: "option",
       message: "Seleccione una de las siguientes opciones: ",
-      choices: ["Añadir", "Eliminar", "Modificar", "Consultar información", "Localizar", "Reiniciar Base de Datos", "Generar informes", "Transacciones", "Salir"],
+      choices: ["Añadir", "Eliminar", "Modificar", "Consultar información de bienes", "Localizar personas", "Reiniciar Base de Datos", "Generar informes", "Transacciones", "Salir"],
     },
   ]);
 
@@ -46,11 +46,11 @@ export async function menu() {
       await modifyMenu();
       break;
 
-    case "Consultar información":
+    case "Consultar información de bienes":
       await consultMenu();
       break;
     
-    case "Localizar":
+    case "Localizar personas":
       await locateMenu(); 
       break;
 

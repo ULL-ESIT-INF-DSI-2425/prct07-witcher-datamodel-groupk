@@ -53,4 +53,12 @@ export abstract class Transaction {
 
     return assetQuantity;
    }
+
+   /**
+     * Función que determina que no es un reembolso
+     * @return - Booleano que indica si es true (es un reembolso) o false (compra)
+     */
+   get isRefund(): boolean {
+    return false;
+  }
 }
