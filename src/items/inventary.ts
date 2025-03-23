@@ -109,7 +109,7 @@ export class Inventary {
    * La posada compra una serie de bienes a un mercader
    * @param merchant - Mercader al que se realiza la compra
    * @param date - Fecha en el que se realiza la venta
-   * @param assets - Bienes que se compran
+   * @param stocks - Bienes que se compran
    */
   buyAssets(merchant: Merchant, date: Date, ...stocks: Stock[]): void {
     db.read();
@@ -186,7 +186,7 @@ export class Inventary {
    * Vende una serie de bienes a un cliente
    * @param client - Cliente al que realizar la venta
    * @param date - Fecha en la que se realizó la venta
-   * @param assets - Bienes vendidos
+   * @param stocks - Bienes vendidos
    */
   sellAssets(client: Clients, date: Date, ...stocks: Stock[]): void {
     db.read();
@@ -256,8 +256,7 @@ export class Inventary {
 
  /**
  * Genera un informe del inventario de bienes disponibles.
- * @param filter - Función opcional que se aplica a cada elemento del inventario 
- * para filtrar los bienes según ciertos criterios.
+ * @param name - Nombre  opcional por el que hacer el informe de stock.
  * @returns - Array con la lista de bienes en el inventario, filtrados si se proporciona una función de filtro.
  */
  getStockReport(name?: string): Stock[] {

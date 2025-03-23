@@ -10,7 +10,7 @@ export class Assets {
 
   /**
    * Constructor de Assets
-   * @param name - Nombre del bien
+   * @param _name - Nombre del bien
    * @param _description - Descripción del bien
    * @param _materials - Materiales del bien
    * @param _weight - Peso del bien
