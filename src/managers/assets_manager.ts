@@ -53,7 +53,7 @@ export class AssetManager {
    * @returns - Array de elementos ordenados.
    */
   sortByCrowns(is_ascendance: boolean): Assets[] {
-    return [...this.assets].sort((a, b) => 
+    return this.assets.sort((a, b) => 
       is_ascendance ? a.crowns - b.crowns : b.crowns - a.crowns
     );
   }
